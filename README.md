@@ -68,6 +68,6 @@ How will it work?
 + I figured I would add an option to export this information to some variant of xml (plist, etc)
 
 <h4>Metadata Manager</h4>
-+ Finally, the program will need to __parse itunesmetadata.plist__.
++ Finally, the program will need to parse itunesmetadata.plist.
 + This shouldn't be much of a problem, as its just a matter of parsing and manipulating multiple xml files, something there's bound to be a library for.
 + If this is to much of a problem, I just won't include it, as it is somewhat out of place in this program.
