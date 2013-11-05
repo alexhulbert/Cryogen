@@ -9,6 +9,7 @@ What is iCEW1ND?
 + I _desperately_ need help with this. Any contributions are greatly appreciated
 + All tasks done by ICEW1ND can be done at any point in time, in DFU or after the iPhone has been restored
 + If anything is in __bold__, I don't have any definate way to do it. In other words, I'll probably need help.
++ It will be written in either Java or Groovy (I'm leaning towards Java right now)
 
 What can it do?
 ---------------
@@ -19,6 +20,22 @@ What can it do?
   + Restore those apps/data to the Device at any given time
   + Create a list of all the apps and information about them (bundle id, short name, UID, etc.)
   + Bulk modify the metadata for multiple apps at once
+
+Contributing
+------------
+
++ If you just want to add snippits of code, put them into the "code" folder.
++ Miscellaneous ideas can be added as comments in issue #1
++ Please try to use 4-spaced tabs (or just regular ones) and keep your curly braces on the same line as your statements. example:
+
+```Java
+if (this.user.codingStyle.toLowerCase() == "correct") {
+    me.setHappiness(true);
+} else {
+    me.setHappiness(false);
+}
+```
++ Since this is open source, you can pretty much do whatever you want with it
 
 How will it work?
 -----------------
