@@ -15,18 +15,18 @@ What can it do?
 ---------------
 
 + iCEW1ND will be able to do 5 things:
-  + Load selected app data from iCloud onto an iDevice even after it has been restored
-  + Backup apps and their data even when an iDevice is in DFU mode
-  + Restore those apps/data to the Device at any given time
-  + Create a list of all the apps and information about them (bundle id, short name, UID, etc.)
-  + Bulk modify the metadata for multiple apps at once
+  1. Load selected app data from iCloud onto an iDevice even after it has been restored
+  2. Backup apps and their data even when an iDevice is in DFU mode
+  3. Restore those apps/data to the Device at any given time
+  4. Create a list of all the apps and information about them (bundle id, short name, UID, etc.)
+  5. Bulk modify the metadata for multiple apps at once
 
 Contributing
 ------------
 
 + If you just want to add snippits of code, put them into the "code" folder.
 + Miscellaneous ideas can be added as comments in issue #1
-+ Please try to use 4-spaced tabs (or just regular ones) and keep your curly braces on the same line as your statements. example:
++ Please try to use 4-spaced tabs (or just regular ones) and keep your curly braces on the same line as your statements. __example:__
 
 ```Java
 if (this.user.codingStyle.toLowerCase() == "correct") {
