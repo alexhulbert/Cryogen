@@ -53,7 +53,7 @@ How will it work?
 + Then, disk0s1s1 and disk0s1s2 will be mounted on the DFU device (if necessary)
 + The SSH connection (DFU ramdisk or usb tunnel) will be mounted onto the computer directly.
 + The apps in /var/mobile/Applications will be __repacked into ipas__ (this should be easy, as it is already done by dozens of programs)
-+ The data in /var/mobile/Applications will be stored in folders contain the apps' bundle ids
++ The data in /var/mobile/Applications will be stored in folders containing the apps' bundle ids
 + This will all be zipped into a file which can then later be restored using this program
 
 <h4>Manual app backup</h4>
