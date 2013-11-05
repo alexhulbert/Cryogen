@@ -14,12 +14,11 @@ What is iCEW1ND?
 What can it do?
 ---------------
 
-+ iCEW1ND will be able to do 5 things:
++ iCEW1ND will be able to do 4 things:
   1. Load selected app data from iCloud onto an iDevice even after it has been restored
   2. Backup apps and their data even when an iDevice is in DFU mode
-  3. Restore those apps/data to the Device at any given time
-  4. Create a list of all the apps and information about them (bundle id, short name, UID, etc.)
-  5. Bulk modify the metadata for multiple apps at once
+  3. Restore those apps/data to the Device at any given time.)
+  4. Bulk modify the metadata for multiple apps at once
 
 Contributing
 ------------
@@ -63,10 +62,6 @@ How will it work?
 <h4>Manual app/data restore</h4>
 + The data restore process will be almost exactly like the iCloud one, only there is no prefix and the program will somehow have to __differentiate between the app and its data__.
 + The _app_ restoration will be different, however. It will need to __load the ipas onto the device, ignoring or updating duplicates__. This can work in a similar fassion to dragging the ipas into the device in [25pp](http://pro.25pp.com/ppwin)
-
-<h4>App list export</h4>
-+ In the code I have planned out, an class called "app" is used containing various information like "Pretty Name" and "Bundle ID."
-+ I figured I would add an option to export this information to some variant of xml (plist, etc)
 
 <h4>Metadata Manager</h4>
 + Finally, the program will need to parse itunesmetadata.plist.
