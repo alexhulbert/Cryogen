@@ -24,7 +24,7 @@ What can it do?
 Contributing
 ------------
 
-+ If you just want to add snippits of code, put them into the "code" folder.
++ If you just want to add snippits of code, put them into the "code" folder. They don't necessary have to have correct syntax.
 + Miscellaneous ideas can be added as comments in issue #1
 + I use Netbeans, but you can use whatever you want
 + Please try to use 4-spaced tabs (or just regular ones) and keep your curly braces on the same line as your statements. __example:__
