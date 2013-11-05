@@ -13,28 +13,44 @@ What is iCEW1ND?
 What can it do?
 ---------------
 
-+ iCEW1ND will be able to do 4 things:
++ iCEW1ND will be able to do 5 things:
   + Load selected app data from iCloud onto an iDevice even after it has been restored
   + Backup apps and their data even when an iDevice is in DFU mode
   + Restore those apps/data to the Device at any given time
+  + Create a list of all the apps and information about them (bundle id, short name, UID, etc.)
+  + Bulk modify the metadata for multiple apps at once
 
 How will it work?
 -----------------
 
-+ Sometime this week (it's 11/4/13 as I write this) I will write some pseudocode
+<h3>Sometime this week (it's 11/4/13 as I write this) I will write some pseudocode</h3>
 
-_______
+<h4>Manual iCloud Restore</h4>
 + The iCloud restore will __download and decrypt the iCloud data__ in a similar fassion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
 + The downloaded chunk folders (ex: AppDomain-com.2dboy.worldofgoo) will be stripped of their prefix (AppDomain-) and matched with an app in /var/mobile/Applications by looking at the plist names in /var/mobile/Applications/<UID>/Library/Preferences
 + This data will then be copied over to the device over an SSH tunnel.
-_______ 
-+ The The backup process will start off by __checking if the device is in DFU Mode__. If it is, it will load on an SSH Ramdisk (See [this repo](https://github.com/msftguy/ssh-rd) for more information on how this is done)
-+ Then, disk0s1s1 and disk0s1s2 will be mounted on the DFU device (if nesisarry)
+
+<h4>Manual data backup</h4>
++ The The backup process will start off by checking if the device is in DFU Mode using a program such as [this](https://github.com/ThePrivateDevTeam/DFU--Detector). If it is, it will load on an SSH Ramdisk (See [this repo](https://github.com/msftguy/ssh-rd) for more information on how this is done)
++ Then, disk0s1s1 and disk0s1s2 will be mounted on the DFU device (if necessary)
 + The SSH connection (DFU ramdisk or usb tunnel) will be mounted onto the computer directly.
 + The apps in /var/mobile/Applications will be __repacked into ipas__ (this should be easy, as it is already done by dozens of programs)
 + The data in /var/mobile/Applications will be stored in folders contain the apps' bundle ids
 + This will all be zipped into a file which can then later be restored using this program
 
-_______
-I have to stop explaining now, but I've got the rest of the project planned out in my head with things like ipa repacking, etc. I will write more tomorrow
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+<h4>Manual app backup</h4>
++ The only trick to this one is __repacking your apps into ipas__.
++ It also might be important to note that this should also be done over SSH with an alternate root if the device is in DFU.
+
+<h4>Manual app/data restore</h4>
++ The data restore process will be almost exactly like the iCloud one, only there is no prefix and the program will somehow have to __differentiate between the app and its data__.
++ The _app_ restoration will be different, however. It will need to __load the ipas onto the device, ignoring or updating duplicates__. This can work in a similar fassion to dragging the ipas into the device in [25pp](http://pro.25pp.com/ppwin)
+
+<h4>App list export</h4>
++ In the code I have planned out, an class called "app" is used containing various information like "Pretty Name" and "Bundle ID."
++ I figured I would add an option to export this information to some variant of xml (plist, etc)
+
+<h4>Metadata Manager</h4>
++ Finally, the program will need to __parse itunesmetadata.plist__.
++ This shouldn't be much of a problem, as its just a matter of parsing and manipulating multiple xml files, something there's bound to be a library for.
++ If this is to much of a problem, I just won't include it, as it is somewhat out of place in this program.
