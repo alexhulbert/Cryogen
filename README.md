@@ -14,12 +14,13 @@ What is iCEW1ND?
 What can it do?
 ---------------
 
-+ iCEW1ND will be able to do 5 things:
++ iCEW1ND will be able to do 6 things:
   1. Load selected app data from iCloud onto an iDevice even after it has been restored
   2. Backup apps and their data even when an iDevice is in DFU mode
   3. Restore those apps/data to the Device at any given time.)
   4. Bulk modify the metadata for multiple apps at once
-  5. Backup/Restore packages and custom paths
+  5. Backup/Restore packages & sources
+  6. Backup/Restore custom paths
 
 Contributing
 ------------
