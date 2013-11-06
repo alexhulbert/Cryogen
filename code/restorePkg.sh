@@ -1,4 +1,3 @@
-#!/bin/bash
 unzip backup.zip /tmp/icewind
 dpkg --set-selections << /tmp/icewind/sel
 dpkg -i /tmp/icewind/apt07strict/* #constains apt-get packages & dependencies
