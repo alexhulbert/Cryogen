@@ -9,7 +9,7 @@ What is iCEW1ND?
 + I _desperately_ need help with this. Any contributions are greatly appreciated
 + All tasks done by ICEW1ND can be done at any point in time, in DFU or after the iPhone has been restored
 + If anything is in __bold__, I don't have any definate way to do it. In other words, I'll probably need help.
-+ It will be written in either Java or Groovy (I'm leaning towards Java right now)
++ It will be written in either Java or Groovy (I'm leaning towards Javaa right now)
 
 What can it do?
 ---------------
@@ -70,7 +70,7 @@ How will it work?
 
 <h4>Backup Packages</h4>
 + Icewind will get the installed packages with ```dpkg --get-selections | sed 's/^.+[ \t]*deinstall[ \t]*$//g``` and iterate through each line in a "for" statement
-+ The program will check if the specified package can be downloaded online by checking it ```apt-cache search $1``` where $1 is a line in the above command after running ```preg_replace("^([^ \t]+)[ \t]*install[ \t]*$``` to get the package id
++ The program will check if the specified package can be downloaded online by checking it ```apt-cache policy $1``` where $1 is a line in the above command after running ```preg_replace("^([^ \t]+)[ \t]*install[ \t]*$``` to get the package id
 + If the package is not found in any of the sources, it will be repackaged into a deb file, which will be added to a "deb" folder in the backup zip
 + If the package _is_ found, that line of the the dpkg command (something like "com.blah.blah       install") will be added to another file, containing the dpkg selections
 + The sources will also be backed up. I know there is a file somewhere that lists the sources, but I don't know its location off the top of my head. Regardless, backing up sources should be relatively easy.
