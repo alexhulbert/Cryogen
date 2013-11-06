@@ -42,8 +42,6 @@ if (this.user.codingStyle.toLowerCase() == "correct") {
 How will it work?
 -----------------
 
-<h3>Sometime this week (it's 11/4/13 as I write this) I will write some pseudocode</h3>
-
 <h4>Manual iCloud Restore</h4>
 + The iCloud restore will __download and decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
 + The downloaded chunk folders (ex: AppDomain-com.2dboy.worldofgoo) will be stripped of their prefix (AppDomain-) and matched with an app in /var/mobile/Applications by looking at the plist names in /var/mobile/Applications/<UID>/Library/Preferences
