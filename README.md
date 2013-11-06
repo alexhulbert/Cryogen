@@ -93,5 +93,5 @@ How will it work?
 + The "debs" folder and selections file will be removed with ```rm -R debs``` and ```rm apt```
 + Finally the selections will be installed (the dpkg command doesn't accually install them) with ```apt-get --fix-missing -f dselect-upgrade```
 + The "f" flag is for "force." It allows you to install the packages even if there are some dependency errors, which might have happened because some debs were installed manually
-+ The "--fix-missing" flag makes sure that the command doesn't stop mid-way because of an error. That could be disastorous.
++ The "--fix-missing" flag makes sure that the command doesn't stop mid-way because of an error. That could be disastrous.
 + Finally, a simple ```reboot``` will reboot the device and finish the installation process
