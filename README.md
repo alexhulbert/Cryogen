@@ -48,7 +48,7 @@ How will it work?
 + This data will then be copied over to the device over an SSH tunnel.
 
 <h4>Manual data backup</h4>
-+ The The backup process will start off by checking if the device is in DFU Mode using a program such as [this](https://github.com/ThePrivateDevTeam/DFU--Detector). If it is, it will load on an SSH Ramdisk (See [this repo](https://github.com/msftguy/ssh-rd) for more information on how this is done)
++ The The backup process will start off by checking if the device is in DFU Mode using a program such as [this](https://github.com/ThePrivateDevTeam/DFU--Detector). If it is, it will load on an SSH Ramdisk using [msftguy's JSyringe and SSH Ramdisk](https://github.com/msftguy/ssh-rd)
 + Then, disk0s1s1 and disk0s1s2 will be mounted on the DFU device (if necessary)
 + The SSH connection (DFU ramdisk or usb tunnel) will be mounted onto the computer directly.
 + The apps in /var/mobile/Applications will be __repacked into ipas__ (this should be easy, as it is already done by dozens of programs)
