@@ -51,12 +51,11 @@ How will it work?
 + The The backup process will start off by checking if the device is in DFU Mode. If it is, it will load on an SSH Ramdisk using [msftguy's JSyringe and SSH Ramdisk](https://github.com/msftguy/ssh-rd)
 + Then, disk0s1s1 and disk0s1s2 will be mounted on the DFU device (if necessary)
 + The SSH connection (DFU ramdisk or usb tunnel) will be mounted onto the computer directly.
-+ The apps in /var/mobile/Applications will be __repacked into ipas__ (this should be easy, as it is already done by dozens of programs)
 + The data in /var/mobile/Applications will be stored in folders containing the apps' bundle ids
 + This will all be zipped into a file which can then later be restored using this program
 
 <h4>Manual app backup</h4>
-+ The only trick to this one is __repacking your apps into ipas__.
++ The only trick to this one is __repacking your apps into ipas__ (this should be easy, as it is already done by dozens of programs).
 + It also might be important to note that this should also be done over SSH with an alternate root if the device is in DFU.
 
 <h4>Manual app/data restore</h4>
