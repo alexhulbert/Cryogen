@@ -36,4 +36,5 @@ Useful links
 + The following links might aid you in understanding the way iCloud and iTunes encrypt their backups
 + [Cracking and Analyzing Apple iCloud](http://www.cansecwest.com/slides/2013/Cracking%20and%20Analyzing%20Apple%20iCloud.ppt)
 + [iTunes Backup Decrption](http://www.exploit-db.com/wp-content/themes/exploit/docs/19767.pdf)
++ [iPhone Wiki Page](http://theiphonewiki.com/wiki/ITunes_Backup)
 + [MBDB Decryption Script (Python)](http://code.google.com/p/iphone-dataprotection/source/browse/python_scripts/backups/backup4.py)
