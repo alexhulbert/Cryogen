@@ -7,7 +7,9 @@ Background Information
 ----------------------
 
 + Currently, the only thing I know of that can decrypt an iCloud backup is some program by Elcommsoft (See README.MD), but this is $200 and closed-source
-+ After testing the program, it seems that it downloads some "chunks," which are files containing random hex along with ".files" and ".keys"
++ After testing the program, it seems that it downloads some "chunks," which are files that each represent a file from iCloud or some piece of data
++ It also downloads two other files: ".files" and ".keys"
++ Each chunk's name is a random string of hex (each one is the same length)
 + I opened ".files" in a hex editor and it contains the name of the chunk file in hex, followed by 3 bytes, and then the path/name to the file.
 + Presumably, the program parses this file to give the chunks their correct name (the ones accually used on the device).
 + As for the ".keys" file, I think this might have something to do with decrypting certain data into those chunks
