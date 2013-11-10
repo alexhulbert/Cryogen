@@ -2,7 +2,9 @@ package com.taconut.icewind;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -49,5 +51,19 @@ public class iCloud {
                 }
             }
         }
+    }
+    
+    public static Integer getDsPrsID(String plist) {
+        return null; //TODO: Parse plist for dsPrsID
+    }
+    
+    public static String getMmeAuthToken(String plist) {
+        return null; //TODO: Parse plist for mmeAuthToken
+    }
+    
+    public static String authenticate(String appleID, String password) {
+        Map<String, String> authHeaders = new HashMap<>();
+        authHeaders.put("Authorization", "Basic " + Utils.b64Encode(appleID, password));
+        return Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/authenticate/" + appleID, true);
     }
 }
