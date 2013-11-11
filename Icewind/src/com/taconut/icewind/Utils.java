@@ -10,6 +10,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -26,6 +27,8 @@ public class Utils {
         icph.put("X-Apple-MBS-Protocol-Version", "2.3");
         icph.put("X-MMe-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
         return icph;
+        //xmlwise.Plist pl = new xmlwise.Plist();
+        //pl.
     }
     
     public static Map<String, String> getIcpHeaders(Map<String, String> headers) {
@@ -57,18 +60,22 @@ public class Utils {
                 content += "\n";
                 content += line;
             }
-            content = content.substring(1);
+            if (content.length() > 1) {
+                content = content.substring(1);
+            } else {
+                return null;
+            }
         } catch(IOException e) {
             e.printStackTrace();
         }
         return content;
     }
     
-    public static String b64Encode(String part1, String part2) {
-        return base64.encode(part1 + ":" + part2);
+    public static String encode(String part1, String part2) {
+        return Base64.encodeBase64String((part1 + ":" + part2).getBytes());
     }
     
-    public static String b64Encode(String part) {
-        return base64.encode(part);
+    public static String encode(String part) {
+        return Base64.encodeBase64String(part.getBytes());
     }
 }
