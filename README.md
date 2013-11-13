@@ -43,7 +43,7 @@ How will it work?
 -----------------
 
 <h4>Manual iCloud Restore</h4>
-+ The iCloud restore will __download and decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
++ The iCloud restore will download and __decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
 + The downloaded chunk folders (ex: AppDomain-com.2dboy.worldofgoo) will be stripped of their prefix (AppDomain-) and matched with an app in /var/mobile/Applications by looking at the plist names in /var/mobile/Applications/<UID>/Library/Preferences
 + This data will then be copied over to the device over an SSH tunnel.
 
@@ -79,7 +79,7 @@ How will it work?
 + On each subdirectory, the program will create a folder. For example, backing up "/private/var/mobile" would start off by creating a "private" folder in a temp directory, a "var" directory in the private folder, and so on.
 + Once this is done, the contents of the last folder will be copied into the temp folder. In the example, a command such as ```cp -R /private/var/mobile/* /tmp/icewind/private/var/mobile``` would be run
 + This will happen for each path the user wants to backup, all of the paths being merged into one root folder
-+ Finally, this root __folder will be packaged into a deb__ and deleted.
++ Finally, this root folder will be packaged into a deb and deleted.
 + This deb can then be added to the "debs" folder in the backup zip
 <h4>Restore Packages</h4>
 + First, the "debs" folder, the dpkg selections file (which I'm going to call "sel"), and the sources file will be unzipped
