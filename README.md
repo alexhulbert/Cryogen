@@ -1,6 +1,8 @@
 iCEW1ND
 =======
 
+<img src="img/icewind.jpg">
+
 What is iCEW1ND?
 ----------------
 
