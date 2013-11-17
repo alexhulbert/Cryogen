@@ -124,11 +124,44 @@ public class iCloud {
         return Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/get_account_settings", true);
     }
     
-    
-    public static String get_backupudid(String pNum, String dsPrsID, String mmeAuthToken) {
-        //The mmeAuthToken is incorrect. I have no clue where the Base64 string I need is. After sniffing connections made by EPPB, I know it comes from setup.cloud.com too, I just need the path.
+    /**
+     * gets the udids of the devices that have made backups on the account
+     * @param pNum Partition number
+     * @param dsPrsID DsPrsID
+     * @param mmeAuthToken mmeAuthToken (From get_account_settings)
+     * @return a list of udids linked with the account (encoded with Protobuf)
+     */
+    public static byte[] get_backupudid(String pNum, String dsPrsID, String mmeAuthToken) {
         Map<String, String> authHeaders = new HashMap<>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID, true);
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID, true);
+    }
+    
+    /**
+     * Gets information on the device
+     * @param pNum Partition number
+     * @param dsPrsID DsPrsID
+     * @param mmeAuthToken mmeAuthToken (From get_account_settings)
+     * @param backupUDID the udid of the device to retrieve info on
+     * @return information of the device (encoded with protobuf)
+     */
+    public static byte[] get_backup_info(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
+        Map<String, String> authHeaders = new HashMap<>();
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID, true);
+    }
+    
+    /**
+     * Gets the keys that will used for decrypting iCloud data
+     * @param pNum Partition number
+     * @param dsPrsID DsPrsID
+     * @param mmeAuthToken mmeAuthToken (From get_account_settings)
+     * @param backupUDID the udid of the device to retrieve info on
+     * @return keys for decrypting icloud data (encoded with protobuf)
+     */
+    public static byte[] get_backup_keys(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
+        Map<String, String> authHeaders = new HashMap<>();
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/getKeys", true);
     }
 }
