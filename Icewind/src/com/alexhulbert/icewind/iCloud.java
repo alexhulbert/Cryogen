@@ -125,11 +125,11 @@ public class iCloud {
     }
     
     /**
-     * gets the udids of the devices that have made backups on the account
+     * Gets the udids of the devices that have made backups on the account
      * @param pNum Partition number
      * @param dsPrsID DsPrsID
-     * @param mmeAuthToken mmeAuthToken (From get_account_settings)
-     * @return a list of udids linked with the account (encoded with Protobuf)
+     * @param mmeAuthToken <meAuthToken (From get_account_settings)
+     * @return A list of udids linked with the account (encoded with Protobuf)
      */
     public static byte[] get_backupudid(String pNum, String dsPrsID, String mmeAuthToken) {
         Map<String, String> authHeaders = new HashMap<>();
@@ -141,9 +141,9 @@ public class iCloud {
      * Gets information on the device
      * @param pNum Partition number
      * @param dsPrsID DsPrsID
-     * @param mmeAuthToken mmeAuthToken (From get_account_settings)
-     * @param backupUDID the udid of the device to retrieve info on
-     * @return information of the device (encoded with protobuf)
+     * @param mmeAuthToken MmeAuthToken (From get_account_settings)
+     * @param backupUDID The udid of the device to retrieve info on
+     * @return Information of the device (encoded with protobuf)
      */
     public static byte[] get_backup_info(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
         Map<String, String> authHeaders = new HashMap<>();
@@ -155,13 +155,36 @@ public class iCloud {
      * Gets the keys that will used for decrypting iCloud data
      * @param pNum Partition number
      * @param dsPrsID DsPrsID
-     * @param mmeAuthToken mmeAuthToken (From get_account_settings)
-     * @param backupUDID the udid of the device to retrieve info on
-     * @return keys for decrypting icloud data (encoded with protobuf)
+     * @param mmeAuthToken MmeAuthToken (From get_account_settings)
+     * @param backupUDID The udid of the device to retrieve info on
+     * @return Keys for decrypting icloud data (encoded with protobuf)
      */
     public static byte[] get_backup_keys(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
         Map<String, String> authHeaders = new HashMap<>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/getKeys", true);
+    }
+    
+    /**
+     * Gets Uris for the iCloud backup data
+     * @param pNum Partition number
+     * @param dsPrsID DsPrsID
+     * @param mmeAuthToken MmeAuthToken (From get_account_settings)
+     * @param backupUDID The udid of the device to retrieve info on
+     * @param snapshotID The ID of the backup to get
+     * @param offset Where to start
+     * @param limit Max length
+     * @return A list of files to download
+     */
+    public static byte[] get_files(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID, int offset, String limit) {
+        Map<String, String> authHeaders = new HashMap<>();
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset /*+ "&limit=" + limit*/, true);
+    }
+    
+    public static String get_url(String pNum, String dsPrsID, String mmeAuthToken) {
+        Map<String, String> authHeaders = new HashMap<>();
+        authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
+        return Utils.post(Utils.getIcpHeaders(authHeaders), new HashMap<String, String>(), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);
     }
 }

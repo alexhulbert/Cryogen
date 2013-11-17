@@ -1,11 +1,12 @@
 package com.alexhulbert.icewind;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.http.HttpResponse;
@@ -14,6 +15,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 
 /**
  *
@@ -21,7 +26,7 @@ import org.apache.commons.io.IOUtils;
  */
 public class Utils {
     
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    final protected static char[] hexArray = "0123456789abcdef".toCharArray();
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         int v;
@@ -58,6 +63,62 @@ public class Utils {
         return headers;
     }
     
+    public static String post(Map<String, String> params, Map<String, String> headers, String host, String path, boolean ssl) {
+        String content = "";
+        HttpClient dhCli = HttpClientBuilder.create().build();
+        try {
+            HttpResponse hResp = dhCli.execute(post_raw(params, headers, host, path, ssl));
+            BufferedReader br = new BufferedReader(new InputStreamReader(hResp.getEntity().getContent()));
+            
+            String line;
+            while ((line = br.readLine()) != null) {
+                content += "\n";
+                content += line;
+            }
+            if (content.length() > 1) {
+                return content.substring(1);
+            } else {
+                return null;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static byte[] post_bytes(Map<String, String> params, Map<String, String> headers, String host, String path, boolean ssl) {
+        HttpClient dhCli = HttpClientBuilder.create().build();
+        try {
+            HttpResponse hResp = dhCli.execute(post_raw(params, headers, host, path, ssl));
+            return IOUtils.toByteArray(hResp.getEntity().getContent());
+        } catch(IOException | IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    private static HttpPost post_raw(Map<String, String> params, Map<String, String> headers, String host, String path, boolean ssl) {
+        String protocol = ssl ? "https://" : "http://";
+        HttpPost httpPost = new HttpPost(protocol + host + path);
+        List<NameValuePair> nvp = new ArrayList<>();
+        for (Entry<String, String> parameter : params.entrySet()) {
+            nvp.add(new BasicNameValuePair(parameter.getKey(), parameter.getValue()));
+        }
+        
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(nvp));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        
+        httpPost.addHeader("Host", host);
+        for (Entry<String, String> header : headers.entrySet()) {
+            httpPost.addHeader(header.getKey(), header.getValue());
+        }
+        
+        return httpPost;
+    }
+    
     private static HttpGet get_raw(Map<String, String> headers, String host, String path, boolean ssl) {
         String protocol = ssl ? "https://" : "http://";
         HttpGet httpGet = new HttpGet(protocol + host + path);
@@ -92,15 +153,14 @@ public class Utils {
     }
     
     public static byte[] get_bytes(Map<String, String> headers, String host, String path, boolean ssl) {
-        byte[] content = {};
         HttpClient dhCli = HttpClientBuilder.create().build();
         try {
             HttpResponse hResp = dhCli.execute(get_raw(headers, host, path, ssl));
-            content = IOUtils.toByteArray(hResp.getEntity().getContent());
+            return IOUtils.toByteArray(hResp.getEntity().getContent());
         } catch(IOException e) {
             e.printStackTrace();
         }
-        return content;
+        return null;
     }
     
     public static String encode(String part1, String part2) {
