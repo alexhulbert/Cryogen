@@ -21,7 +21,7 @@ Libraries
 
 Apache - Commons io, Commons Codec, and HttpClient (for Various things)
 Christoffer Lerno - Xmlwise (for plist parsing)
-Jurriaan - jDeb (for turning paths into .deb files)
+Tcurdt - jDeb (for turning paths into .deb files)
 JCraft - JSCH (SSHing, SCP, etc.)
 MSFTGuy - JSyringe and SSH Ramdisk
 Chronic Dev - Syringe
