@@ -1,0 +1,50 @@
+message DeviceUdids {
+	required string psid = 1;
+	repeated bytes udids = 2;
+	optional bool usuallyFalse = 3;
+}
+
+message Device {
+    required bytes udid = 1;
+    required int64 fullSize = 2;
+    repeated Backup backup = 3;
+    required DeviceInfo device = 4;
+    required int64 time = 5;
+}
+
+message Backup {
+	required int32 snapshotID = 1;
+	required int64 size = 2;
+	required int64 time1 = 3;
+	required BackupInfo info = 5;
+	required int64 time2 = 6;
+}
+
+message BackupInfo {
+    required string name = 1;
+    required string firmware = 2;
+    required string build = 3;
+    required int32 usually2_1 = 4;
+    required bytes idk = 5;
+    required int32 usually2_2 = 6;
+	required int32 usually1 = 7;
+}
+
+message DeviceInfo {
+	required string shortName = 1;
+    required string realName = 2;
+    required string serial = 3;
+    required string color = 4;
+    required string model = 5;
+    required string prettyName = 6;
+    optional string idk = 7;
+}
+
+message Keys {
+	repeated Key keySet = 1;
+}
+
+message Key {
+	required int32 index = 1;
+	required string data = 2;
+}
