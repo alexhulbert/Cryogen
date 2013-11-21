@@ -39,7 +39,7 @@ public class Utils {
     }
     
     public static Map<String, String> getIcpHeaders() {
-        Map<String, String> icph = new HashMap<>();
+        Map<String, String> icph = new HashMap<String, String>();
         icph.put("Accept", "*/*");
         icph.put("User-Agent", "MobileBackup/5.1.1 (9B206; iPhone4,1)");
         icph.put("Accept", "application/vnd.com.apple.mbs+protobuf");
@@ -100,7 +100,7 @@ public class Utils {
     private static HttpPost post_raw(Map<String, String> params, Map<String, String> headers, String host, String path, boolean ssl) {
         String protocol = ssl ? "https://" : "http://";
         HttpPost httpPost = new HttpPost(protocol + host + path);
-        List<NameValuePair> nvp = new ArrayList<>();
+        List<NameValuePair> nvp = new ArrayList<NameValuePair>();
         for (Entry<String, String> parameter : params.entrySet()) {
             nvp.add(new BasicNameValuePair(parameter.getKey(), parameter.getValue()));
         }

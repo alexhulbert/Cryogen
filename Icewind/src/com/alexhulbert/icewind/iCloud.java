@@ -107,7 +107,7 @@ public class iCloud {
      * @return A plist containing your mmeAuthToken and dsPrsID
      */
     public static String authenticate(String appleID, String password) {
-        Map<String, String> authHeaders = new HashMap<>();
+        Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(appleID, password));
         return Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/authenticate/" + appleID, true);
     }
@@ -119,7 +119,7 @@ public class iCloud {
      * @return Information about your account
      */
     public static String get_account_settings(String dsPrsID, String mmeAuthToken) {
-        Map<String, String> authHeaders = new HashMap<>();
+        Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/get_account_settings", true);
     }
@@ -132,7 +132,7 @@ public class iCloud {
      * @return A list of udids linked with the account (encoded with Protobuf)
      */
     public static byte[] get_backupudid(String pNum, String dsPrsID, String mmeAuthToken) {
-        Map<String, String> authHeaders = new HashMap<>();
+        Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID, true);
     }
@@ -146,7 +146,7 @@ public class iCloud {
      * @return Information of the device (encoded with protobuf)
      */
     public static byte[] get_backup_info(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
-        Map<String, String> authHeaders = new HashMap<>();
+        Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID, true);
     }
@@ -160,7 +160,7 @@ public class iCloud {
      * @return Keys for decrypting icloud data (encoded with protobuf)
      */
     public static byte[] get_backup_keys(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
-        Map<String, String> authHeaders = new HashMap<>();
+        Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/getKeys", true);
     }
@@ -177,13 +177,13 @@ public class iCloud {
      * @return A list of files to download
      */
     public static byte[] get_files(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID, int offset, String limit) {
-        Map<String, String> authHeaders = new HashMap<>();
+        Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset /*+ "&limit=" + limit*/, true);
     }
     
     public static String get_url(String pNum, String dsPrsID, String mmeAuthToken) {
-        Map<String, String> authHeaders = new HashMap<>();
+        Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.post(Utils.getIcpHeaders(authHeaders), new HashMap<String, String>(), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);
     }
