@@ -13,6 +13,24 @@ What is iCEW1ND?
 + If anything is in __bold__, I don't have any definitive way to do it. In other words, I'll probably need help.
 + It will be written in either Java or Groovy (I'm leaning towards Java right now)
 
+CURRENT STATUS:
+---------------
+Here, you can see whats currently going on
+
+<pre>
+iCloud        {+++------} 30%
+Data Backup   {+--------} 10%
+Data Restore  {++-------} 20%
+App Backup    {---------}  0%
+App Restore   {++++-----} 40%
+Plist Editor  {---------}  0%
+Cydia Restore {+--------} 10%
+Cydia Backup  {+--------} 10%
+</pre>
+
++ For discussions on iCloud decryption, please see [this issue](https://github.com/jurriaan/Ruby-iCloud/issues/1)
++ For the reddit thread and discussion, please see [this post](http://www.reddit.com/r/jailbreak/comments/1r57b2/need_help_developing_new_application_icew1nd/)
+
 What can it do?
 ---------------
 
