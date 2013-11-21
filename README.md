@@ -10,8 +10,26 @@ What is iCEW1ND?
 + It will not require a fully booting device, just one that can enter DFU
 + I _desperately_ need help with this. Any contributions are greatly appreciated
 + All tasks done by ICEW1ND can be done at any point in time, in DFU or after the iPhone has been restored
-+ If anything is in __bold__, I don't have any definate way to do it. In other words, I'll probably need help.
-+ It will be written in either Java or Groovy (I'm leaning towards Javaa right now)
++ If anything is in __bold__, I don't have any definitive way to do it. In other words, I'll probably need help.
++ It will be written in either Java or Groovy (I'm leaning towards Java right now)
+
+CURRENT STATUS:
+---------------
+Here, you can see whats currently going on
+
+<pre>
+iCloud        {+++------} 30%
+Data Backup   {+--------} 10%
+Data Restore  {++-------} 20%
+App Backup    {---------}  0%
+App Restore   {++++-----} 40%
+Plist Editor  {---------}  0%
+Cydia Restore {+--------} 10%
+Cydia Backup  {+--------} 10%
+</pre>
+
++ For discussions on iCloud decryption, please see [this issue](https://github.com/jurriaan/Ruby-iCloud/issues/1)
++ For the reddit thread and discussion, please see [this post](http://www.reddit.com/r/jailbreak/comments/1r57b2/need_help_developing_new_application_icew1nd/)
 
 What can it do?
 ---------------
@@ -45,8 +63,8 @@ How will it work?
 -----------------
 
 <h4>Manual iCloud Restore</h4>
-+ The iCloud restore will download and __decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
-+ The downloaded chunk folders (ex: AppDomain-com.2dboy.worldofgoo) will be stripped of their prefix (AppDomain-) and matched with an app in /var/mobile/Applications by looking at the plist names in /var/mobile/Applications/<UID>/Library/Preferences
++ The iCloud restore will __download and decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
++ The downloaded chunks will be categorized by their domain (AppDomain, etc) and the apps will be matched using their bundle IDs (ex: AppDomain-com.2dboy.worldofgoo) by looking at Info.plist and extracting the "CFBundleIdentifier"
 + This data will then be copied over to the device over an SSH tunnel.
 
 <h4>Manual data backup</h4>
@@ -62,7 +80,9 @@ How will it work?
 
 <h4>Manual app/data restore</h4>
 + The data restore process will be almost exactly like the iCloud one, only there is no prefix and the program will somehow have to __differentiate between the app and its data__.
-+ The _app_ restoration will be different, however. It will need to __load the ipas onto the device, ignoring or updating duplicates__. This can work in a similar fassion to dragging the ipas into the device in [25pp](http://pro.25pp.com/ppwin)
++ The _app_ restoration will be different, however. It will need to load the ipas onto the device, ignoring or updating duplicates.
++ All app restoration will be done using the appInstall.sh file located in the "code" folder. I've heard that the matadata and artwork don't copy over correctly, but I have yet to verify this for myself.
++ Also, for non-jailbroken devices, the __apps will have to be installed using a different method.__ Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult.
 
 <h4>Metadata Manager</h4>
 + Finally, the program will need to parse itunesmetadata.plist.
@@ -71,10 +91,11 @@ How will it work?
 
 <h4>Backup Packages</h4>
 + Icewind will get the installed packages with ```dpkg --get-selections | sed 's/^.+[ \t]*deinstall[ \t]*$//g``` and iterate through each line in a "for" statement
-+ The program will check if the specified package can be downloaded online by checking it ```apt-cache policy $1``` where $1 is a line in the above command after running ```preg_replace("^([^ \t]+)[ \t]*install[ \t]*$``` to get the package id
++ The program will check if the specified package can be downloaded online by executing ```apt-cache policy $1``` where $1 is a line in the above command after running ```preg_replace("^([^ \t]+)[ \t]*install[ \t]*$``` to get the package id
 + If the package is not found in any of the sources, it will be repackaged into a deb file, which will be added to a "deb" folder in the backup zip
 + If the package _is_ found, that line of the the dpkg command (something like "com.blah.blah       install") will be added to another file, containing the dpkg selections
 + The sources will also be backed up. I know there is a file somewhere that lists the sources, but I don't know its location off the top of my head. Regardless, backing up sources should be relatively easy.
+
 <h4>Backup Custom Folder</h4>
 + The user will also have the option to backup up custom paths
 + This can be done by using something like ```split("/")``` on each path the user wants to create and iterating through each folder.
@@ -83,6 +104,7 @@ How will it work?
 + This will happen for each path the user wants to backup, all of the paths being merged into one root folder
 + Finally, this root folder will be packaged into a deb and deleted.
 + This deb can then be added to the "debs" folder in the backup zip
+
 <h4>Restore Packages</h4>
 + First, the "debs" folder, the dpkg selections file (which I'm going to call "sel"), and the sources file will be unzipped
 + I'm going to assume that they're unzipped into the current directory, but it goes without saying that this might not always be the case.
