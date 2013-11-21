@@ -27,6 +27,7 @@ MSFTGuy - JSyringe and SSH Ramdisk
 Chronic Dev - Syringe
 Planetbeing - XPwn
 Google - ProtoBuf libraries and protoc
+Uncon - For his amazing app installation script
 
 _______
 
