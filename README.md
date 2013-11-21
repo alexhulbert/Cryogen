@@ -45,7 +45,7 @@ How will it work?
 -----------------
 
 <h4>Manual iCloud Restore</h4>
-+ The iCloud restore will download and __decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
++ The iCloud restore will __download and decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
 + The downloaded chunks will be categorized by their domain (AppDomain, etc) and the apps will be matched using their bundle IDs (ex: AppDomain-com.2dboy.worldofgoo) by looking at Info.plist and extracting the "CFBundleIdentifier"
 + This data will then be copied over to the device over an SSH tunnel.
 
@@ -64,7 +64,7 @@ How will it work?
 + The data restore process will be almost exactly like the iCloud one, only there is no prefix and the program will somehow have to __differentiate between the app and its data__.
 + The _app_ restoration will be different, however. It will need to load the ipas onto the device, ignoring or updating duplicates.
 + All app restoration will be done using the appInstall.sh file located in the "code" folder. I've heard that the matadata and artwork don't copy over correctly, but I have yet to verify this for myself.
-+ Also, for non-jailbroken devices, the apps will have to be installed using a different method. Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult
++ Also, for non-jailbroken devices, the __apps will have to be installed using a different method.__ Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult.
 
 <h4>Metadata Manager</h4>
 + Finally, the program will need to parse itunesmetadata.plist.
@@ -73,7 +73,7 @@ How will it work?
 
 <h4>Backup Packages</h4>
 + Icewind will get the installed packages with ```dpkg --get-selections | sed 's/^.+[ \t]*deinstall[ \t]*$//g``` and iterate through each line in a "for" statement
-+ The program will check if the specified package can be downloaded online by checking it ```apt-cache policy $1``` where $1 is a line in the above command after running ```preg_replace("^([^ \t]+)[ \t]*install[ \t]*$``` to get the package id
++ The program will check if the specified package can be downloaded online by executing ```apt-cache policy $1``` where $1 is a line in the above command after running ```preg_replace("^([^ \t]+)[ \t]*install[ \t]*$``` to get the package id
 + If the package is not found in any of the sources, it will be repackaged into a deb file, which will be added to a "deb" folder in the backup zip
 + If the package _is_ found, that line of the the dpkg command (something like "com.blah.blah       install") will be added to another file, containing the dpkg selections
 + The sources will also be backed up. I know there is a file somewhere that lists the sources, but I don't know its location off the top of my head. Regardless, backing up sources should be relatively easy.
