@@ -62,7 +62,7 @@ How will it work?
 
 <h4>Manual app/data restore</h4>
 + The data restore process will be almost exactly like the iCloud one, only there is no prefix and the program will somehow have to __differentiate between the app and its data__.
-+ The _app_ restoration will be different, however. It will need to __load the ipas onto the device, ignoring or updating duplicates__. This can work in a similar fassion to dragging the ipas into the device in [25pp](http://pro.25pp.com/ppwin)
++ The _app_ restoration will be different, however. It will need to load the ipas onto the device, ignoring or updating duplicates. This can work in a similar fassion to dragging the ipas into the device in [25pp](http://pro.25pp.com/ppwin)
 
 <h4>Metadata Manager</h4>
 + Finally, the program will need to parse itunesmetadata.plist.
