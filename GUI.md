@@ -1,0 +1,12 @@
+GUI Example Layout
+==================
+
+This is just an example. You can do whatever you want, but I figured I'd give you an example layout just to get you on the right track.  
+(I don't know if your one of those people that needs a template to work off of, or if you like complete freedom)  
+
++-----------------------+		+-----------------------+
+|	   <Logo here>	 	|		|
+|  __				 	|		|
+| |  | Plug in |It wont | ----\ |
+| |__| Device  |Boot up	| ----/ |
++-----------------------+		+-----------------------+
