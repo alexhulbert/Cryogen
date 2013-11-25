@@ -1,12 +1,12 @@
-iCEW1ND
+Icew1nd
 =======
 
 <img src="img/icewind.jpg">
 
-What is iCEW1ND?
+What is Icew1nd?
 ----------------
 
-+ iCEW1ND will be an alternate method of backing up and restoring iDevices
++ Icew1nd will be an alternate method of backing up and restoring iDevices
 + It will not require a fully booting device, just one that can enter DFU
 + I _desperately_ need help with this. Any contributions are greatly appreciated
 + All tasks done by ICEW1ND can be done at any point in time, in DFU or after the iPhone has been restored
@@ -34,7 +34,7 @@ Cydia Backup  {+--------} 10%
 What can it do?
 ---------------
 
-+ iCEW1ND will be able to do 6 things:
++ Icew1nd will be able to do 6 things:
   1. Load selected app data from iCloud onto an iDevice even after it has been restored
   2. Backup apps and their data even when an iDevice is in DFU mode
   3. Restore those apps/data to the Device at any given time.)
