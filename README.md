@@ -82,7 +82,7 @@ How will it work?
 + The data restore process will be almost exactly like the iCloud one, only there is no prefix and the program will somehow have to __differentiate between the app and its data__.
 + The _app_ restoration will be different, however. It will need to load the ipas onto the device, ignoring or updating duplicates.
 + All app restoration will be done using the appInstall.sh file located in the "code" folder. I've heard that the matadata and artwork don't copy over correctly, but I have yet to verify this for myself.
-+ Also, for non-jailbroken devices, the __apps will have to be installed using a different method.__ Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult.
++ Also, for non-jailbroken devices, the apps will have to be installed using a different method (probably libimobiledevice). Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult.
 
 <h4>Metadata Manager</h4>
 + Finally, the program will need to parse itunesmetadata.plist.
