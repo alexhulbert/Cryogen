@@ -81,9 +81,16 @@ How will it work?
 -----------------
 
 <h4>Manual iCloud Restore</h4>
-+ The iCloud restore will __download and decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
++ The iCloud restore will download and decrypt the iCloud data in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
++ Multiple HTTP GET and POST requests will be made to the iCloud servers to enumerate a list of files, names, __urls__, and keys.
++ It may be important to note that many of these requests will be encoded in [protobuf]() form
++ A list of protobuf message structures that I (or [Jurriaan](https://github.com/Jurriaan)) have reverse-engineered) can be found [here](./code/protobuf.proto).
++ Once the HTTP requests have been made, they will be downloaded from Windows Azure and AWS.
++ These downloaded "chunks" will be __decrypted using the output of "getKeys"__ and renamed to their correct names.
 + The downloaded chunks will be categorized by their domain (AppDomain, etc) and the apps will be matched using their bundle IDs (ex: com.2dboy.worldofgoo) by looking at Info.plist on the client device and parsing out the value of "CFBundleIdentifier"
 + This data will then be copied over to the device over an SSH tunnel (or like [this](#altMeth)).
+Here is a table
++ A handy table depicting this process can be found [here](./ICLOUD.md).
 
 <h4>Manual data backup</h4>
 + The The backup process will start off by checking if the device is in DFU Mode. If it is, it will load on an SSH Ramdisk using [msftguy's JSyringe and SSH Ramdisk](https://github.com/msftguy/ssh-rd)
