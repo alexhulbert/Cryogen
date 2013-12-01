@@ -48,3 +48,67 @@ message Key {
 	required int32 index = 1;
 	required string data = 2;
 }
+
+message fileAuth { //POST this to "authorizeGet"
+	required authChunk main = 1;
+}
+
+message authChunk {
+	required bytes chunkID = 1; //First in header
+	required string authToken = 2; //Second in header
+}
+
+message authorizeGet { //Response from "authorizeGet"
+	required fileData data = 1;
+	required int32 unknown = 2; //Usually 2
+}
+
+message fileData {
+	required downloadData main = 1;
+	required otherData unknown = 2;
+}
+
+message downloadData { //Contains info needed for downloading chunks
+	required request Request = 1;
+	required unknownHex unknown1 = 2;
+	required string unknown2 = 3; //base64?
+	required string unknown3 = 4;
+}
+.
+message unknownHex { //I have no clue what any of this is
+	required bytes unknown1 = 1; //An ID of some sort?
+	required unknownHex2 unknown2 = 2;
+	required int64 unknown3 = 3;
+}
+
+message unknownHex2 { //(See unknownHex)
+	required bytes hex1 = 0;
+	required int32 unknown1 = 7;
+	required bytes hex2 = 13;
+	
+message otherData {
+	required bytes chunkID = 1; //First in header; Same as in fileAuth
+	required zeroZero unknown = 2;
+}
+
+message zeroZero { //Both of these are usually zeros
+	required int32 firstZero = 1; //Usually 0
+	required int32 secondZero = 2; //Usually 0
+}
+
+message request { //This is the URL you need
+	required string host = 1;
+	required string port = 2;
+	required string type = 3;
+	required string path = 4;
+	required string protocol = 5; //"HTTP"
+	required string protoVer = 6; //1.1
+	required string protoPrefix = 7; //"http"
+	repeated header headers = 8;
+	required string unknown = 9; //s3_us_ore
+}
+
+message header { //This is a header to be used when downloading chunks
+	required string key = 1;
+	required string value = 2;
+}
