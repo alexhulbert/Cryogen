@@ -1,19 +1,37 @@
-iCEW1ND
+Icew1nd
 =======
 
 <img src="img/icewind.jpg">
 
-What is iCEW1ND?
+Table of Contents:
+------------------
+
++ <a href="#what-is-icew1nd">What is it?</a>
++ <a href="#current-status">Status</a>
++ <a href="#what-can-it-do">What can it do?</a>
++ <a href="#contributing">Contributing</a>
++ <a href="#how-will-it-work">How will it work?</a>
+  + <a href="#manual-icloud-restore">iCloud</a>
+  + <a href="#manual-data-backup">Data Backup</a>
+  + <a href="#manual-app-backup">App Backup</a>
+  + <a href="#manual-appdata-restore">Restore</a>
+  + <a href="#metadata-manager">iTunesMetadata</a>
+  + <a href="#backup-packages">Cydia Backup</a>
+  + <a href="#backup-custom-folder">Custom Paths</a>
+  + <a href="#restore-packages">Cydia Restore</a>
++ <a href="CREDITS.md">Credits</a>
+
+What is Icew1nd?
 ----------------
 
-+ iCEW1ND will be an alternate method of backing up and restoring iDevices
++ Icew1nd will be an alternate method of backing up and restoring iDevices
 + It will not require a fully booting device, just one that can enter DFU
 + I _desperately_ need help with this. Any contributions are greatly appreciated
 + All tasks done by ICEW1ND can be done at any point in time, in DFU or after the iPhone has been restored
 + If anything is in __bold__, I don't have any definitive way to do it. In other words, I'll probably need help.
 + It will be written in either Java or Groovy (I'm leaning towards Java right now)
 
-CURRENT STATUS:
+<span id="stat">CURRENT STATUS:</span>
 ---------------
 Here, you can see whats currently going on
 
@@ -31,10 +49,10 @@ Cydia Backup  {+--------} 10%
 + For discussions on iCloud decryption, please see [this issue](https://github.com/jurriaan/Ruby-iCloud/issues/1)
 + For the reddit thread and discussion, please see [this post](http://www.reddit.com/r/jailbreak/comments/1r57b2/need_help_developing_new_application_icew1nd/)
 
-What can it do?
+<span id="features">What can it do?</span>
 ---------------
 
-+ iCEW1ND will be able to do 6 things:
++ Icew1nd will be able to do 6 things:
   1. Load selected app data from iCloud onto an iDevice even after it has been restored
   2. Backup apps and their data even when an iDevice is in DFU mode
   3. Restore those apps/data to the Device at any given time.)
@@ -63,9 +81,16 @@ How will it work?
 -----------------
 
 <h4>Manual iCloud Restore</h4>
-+ The iCloud restore will __download and decrypt the iCloud data__ in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
-+ The downloaded chunks will be categorized by their domain (AppDomain, etc) and the apps will be matched using their bundle IDs (ex: AppDomain-com.2dboy.worldofgoo) by looking at Info.plist and extracting the "CFBundleIdentifier"
-+ This data will then be copied over to the device over an SSH tunnel.
++ The iCloud restore will download and decrypt the iCloud data in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
++ Multiple HTTP GET and POST requests will be made to the iCloud servers to enumerate a list of files, names, __urls__, and keys.
++ It may be important to note that many of these requests will be encoded in [protobuf]() form
++ A list of protobuf message structures that I (or [Jurriaan](https://github.com/Jurriaan)) have reverse-engineered) can be found [here](./code/protobuf.proto).
++ Once the HTTP requests have been made, they will be downloaded from Windows Azure and AWS.
++ These downloaded "chunks" will be __decrypted using the output of "getKeys"__ and renamed to their correct names.
++ The downloaded chunks will be categorized by their domain (AppDomain, etc) and the apps will be matched using their bundle IDs (ex: com.2dboy.worldofgoo) by looking at Info.plist on the client device and parsing out the value of "CFBundleIdentifier"
++ This data will then be copied over to the device over an SSH tunnel (or like [this](#altMeth)).
+Here is a table
++ A handy table depicting this process can be found [here](./ICLOUD.md).
 
 <h4>Manual data backup</h4>
 + The The backup process will start off by checking if the device is in DFU Mode. If it is, it will load on an SSH Ramdisk using [msftguy's JSyringe and SSH Ramdisk](https://github.com/msftguy/ssh-rd)
@@ -73,16 +98,21 @@ How will it work?
 + The SSH connection (DFU ramdisk or usb tunnel) will be mounted onto the computer directly.
 + The data in /var/mobile/Applications will be stored in folders containing the apps' bundle ids
 + This will all be zipped into a file which can then later be restored using this program
++ If the device _isn't_ in DFU, then it will have to __find an alternate, non-jailbreak-dependant method for backing up apps__.
++ I think that all the important info _should_ be in the "Documents" folder, which I'm pretty sure is publically accessable
++ If the whole non-jailbroken data backup thing is too complicated, I can just tell the user to back up to iCloud. That should work.
 
 <h4>Manual app backup</h4>
-+ The only trick to this one is __repacking your apps into ipas__ (this should be easy, as it is already done by dozens of programs).
++ The only trick to this one is repacking your apps into ipas (this should be easy, as it is already done by dozens of programs).
++ You can see the script for doing this [here](./code/AppBackup.sh).
 + It also might be important to note that this should also be done over SSH with an alternate root if the device is in DFU.
 
 <h4>Manual app/data restore</h4>
-+ The data restore process will be almost exactly like the iCloud one, only there is no prefix and the program will somehow have to __differentiate between the app and its data__.
++ The data restore process will be almost exactly like the iCloud one, only there is no prefix.
 + The _app_ restoration will be different, however. It will need to load the ipas onto the device, ignoring or updating duplicates.
-+ All app restoration will be done using the appInstall.sh file located in the "code" folder. I've heard that the matadata and artwork don't copy over correctly, but I have yet to verify this for myself.
-+ Also, for non-jailbroken devices, the __apps will have to be installed using a different method.__ Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult.
++ All app restoration will be done using parts of code from [ios-driver](https://www.github.com/ios-driver/ios-driver) and, cosequently, libimobiledevice.
++ I'm not exactly sure how this will be done, but more information will be added as I learn it.
++ Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult.
 
 <h4>Metadata Manager</h4>
 + Finally, the program will need to parse itunesmetadata.plist.
