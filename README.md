@@ -36,11 +36,11 @@ What is Icew1nd?
 Here, you can see whats currently going on
 
 <pre>
-iCloud        {+++------} 30%
-Data Backup   {+--------} 10%
-Data Restore  {++-------} 20%
-App Backup    {---------}  0%
-App Restore   {++++-----} 40%
+iCloud        {++++++---} 60%
+Data Backup   {+++------} 10%
+Data Restore  {---------}  0%
+App Backup    {+--------} 10%
+App Restore   {---------}  0%
 Plist Editor  {---------}  0%
 Cydia Restore {+--------} 10%
 Cydia Backup  {+--------} 10%
