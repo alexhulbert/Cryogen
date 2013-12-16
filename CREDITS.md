@@ -20,8 +20,8 @@ Tcurdt - Helping me and giving me some pointers on iCloud's  decryption process
 Libraries
 ---------
 
-Libimobiledevice - App->ipa and ipa->app
-Storoj - Porting libimobiledevice to Windows
+Libimobiledevice - App->ipa and ipa->app  
+Storoj - Porting libimobiledevice to Windows  
 Apache - Commons io, Commons Codec, and HttpClient (for Various things)  
 Christoffer Lerno - Xmlwise (for plist parsing)  
 Tcurdt - jDeb (for turning paths into .deb files)  
@@ -33,4 +33,4 @@ Google - ProtoBuf libraries and protoc
 _______
 
 Apple - for iCloud and iOS  
-__Oracle__ - for Java  
+Oracle - for Java  
