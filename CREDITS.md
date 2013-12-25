@@ -1,12 +1,18 @@
 Credits
 =======
 
-iCEW1ND by taconut
+iCEW1ND
+-------
+
+Programming
+-----------
+
+Taconut  
 
 Gui
 ---
-Graphic Design - Adisai  
-Taconut - The logo  
+Graphic Design - Adisai 
+  
 iH8Sn0w - Inspiration  
 
 iCloud
