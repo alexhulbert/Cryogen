@@ -1,27 +1,37 @@
 Credits
 =======
 
-iCEW1ND by taconut
-
-Gui
----
-Graphic Design - Adisai  
-Taconut - The logo  
-iH8Sn0w - Inspiration  
+iCEW1ND
+-------
 
 Programming
 -----------
 
-Taconut - For writing the code  
-Elcomsoft - Inspiration and information on how icloud is decrypted  
+Taconut  
+
+Gui
+---
+Graphic Design - Adisai 
+  
+iH8Sn0w - Inspiration  
+
+iCloud
+------
 Jurriaan - Showing me how protocol buffers and other various parts of iCloud work  
+  
+Elcomsoft - Inspiration and information on how icloud is decrypted  
 Tcurdt - Helping me and giving me some pointers on iCloud's  decryption process  
+
+App/Data
+--------
+PythEch - Showing me how to backup/restore apps and getting pymobiledevice to work with Icew1nd  
+  
+GotoHack - Porting libimobiledevice to Python  
+Libimobiledevice - Providing an API for managing iOS devices programatically  
 
 Libraries
 ---------
 
-Libimobiledevice - App->ipa and ipa->app
-Storoj - Porting libimobiledevice to Windows
 Apache - Commons io, Commons Codec, and HttpClient (for Various things)  
 Christoffer Lerno - Xmlwise (for plist parsing)  
 Tcurdt - jDeb (for turning paths into .deb files)  
@@ -33,4 +43,4 @@ Google - ProtoBuf libraries and protoc
 _______
 
 Apple - for iCloud and iOS  
-__Oracle__ - for Java  
+Oracle - for Java  

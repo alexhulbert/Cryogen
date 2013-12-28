@@ -28,8 +28,7 @@ What is Icew1nd?
 + It will not require a fully booting device, just one that can enter DFU
 + I _desperately_ need help with this. Any contributions are greatly appreciated
 + All tasks done by ICEW1ND can be done at any point in time, in DFU or after the iPhone has been restored
-+ If anything is in __bold__, I don't have any definitive way to do it. In other words, I'll probably need help.
-+ It will be written in either Java or Groovy (I'm leaning towards Java right now)
++ It is written in Java (although I will probably have to use a JNI)
 
 <span id="stat">CURRENT STATUS:</span>
 ---------------
@@ -82,7 +81,7 @@ How will it work?
 
 <h4>Manual iCloud Restore</h4>
 + The iCloud restore will download and decrypt the iCloud data in a similar fashion to [Elcomsoft Phone Password Breaker](http://www.elcomsoft.com/eppb.html)
-+ Multiple HTTP GET and POST requests will be made to the iCloud servers to enumerate a list of files, names, __urls__, and keys.
++ Multiple HTTP GET and POST requests will be made to the iCloud servers to enumerate a list of files, names, urls, and keys.
 + It may be important to note that many of these requests will be encoded in [protobuf]() form
 + A list of protobuf message structures that I (or [Jurriaan](https://github.com/Jurriaan)) have reverse-engineered) can be found [here](./code/protobuf.proto).
 + Once the HTTP requests have been made, they will be downloaded from Windows Azure and AWS.
@@ -98,7 +97,7 @@ Here is a table
 + The SSH connection (DFU ramdisk or usb tunnel) will be mounted onto the computer directly.
 + The data in /var/mobile/Applications will be stored in folders containing the apps' bundle ids
 + This will all be zipped into a file which can then later be restored using this program
-+ If the device _isn't_ in DFU, then it will have to __find an alternate, non-jailbreak-dependant method for backing up apps__.
++ If the device _isn't_ in DFU, then it will have to find an alternate, non-jailbreak-dependant method for backing up apps.
 + I think that all the important info _should_ be in the "Documents" folder, which I'm pretty sure is publically accessable
 + If the whole non-jailbroken data backup thing is too complicated, I can just tell the user to back up to iCloud. That should work.
 
