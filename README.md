@@ -3,6 +3,12 @@ Icew1nd
 
 <img src="img/icewind.jpg">
 
+Announcements:
+--------------
+
++ If anybody is willing to restore a jailbreakable A4 device, let me know ASAP! This part of the project is stopping me from continuing on.
++ Have an A5 device? You can beta test the App/Data portion of this project! Just let me know [here](https://github.com/Triforce1/Icew1nd/issues/2).
+
 Table of Contents:
 ------------------
 
@@ -71,19 +77,20 @@ OVERALL       [===>     ] 30%
 Contributing
 ------------
 
++ You can contact me via email at alex@alexhulbert.com 
 + If you just want to add snippits of code, put them into the "code" folder. They don't necessary have to have correct syntax.
-+ Miscellaneous ideas can be added as comments in issue #1
++ General discussion can be found in issue #1.
 + I use Netbeans, but you can use whatever you want
 + Please try to use 4-spaced tabs (or just regular ones) and keep your curly braces on the same line as your statements. __example:__
 
 ```Java
-if (this.user.codingStyle.toLowerCase() == "correct") {
+if (this.user[0].codingStyle.toLowerCase() == "correct") {
     me.setHappiness(true);
 } else {
     me.setHappiness(false);
 }
 ```
-+ Since this is open source, you can pretty much do whatever you want with it
++ Since this is open source, you can pretty much do whatever you want with it. Just follow the [license](LICENSE.md).
 
 How will it work?
 -----------------
