@@ -32,21 +32,30 @@ What is Icew1nd?
 
 <span id="stat">CURRENT STATUS:</span>
 ---------------
-Here, you can see whats currently going on
+
+__Current Tasks:__
++ Finding someone with an A4 device they're willing to wipe (for getFiles)
++ Trying to fix pymobiledevice-Jython compatibility (OOM on sockets)
++ GUI prototyping (Adisai)
+
+__Current Status:__
 
 <pre>
 iCloud        {++++++---} 60%
-Data Backup   {+++------} 10%
-Data Restore  {---------}  0%
-App Backup    {+--------} 10%
-App Restore   {---------}  0%
+Data Backup   {++-------} 20%
+Data Restore  {+++------} 30%
+App Backup    {+++------} 30%
+App Restore   {+++++----} 50%
 Plist Editor  {---------}  0%
 Cydia Restore {+--------} 10%
 Cydia Backup  {+--------} 10%
+OVERALL       [===>     ] 30%
 </pre>
+
 
 + For discussions on iCloud decryption, please see [this issue](https://github.com/jurriaan/Ruby-iCloud/issues/1)
 + For the reddit thread and discussion, please see [this post](http://www.reddit.com/r/jailbreak/comments/1r57b2/need_help_developing_new_application_icew1nd/)
++ For work on Pymobiledevice and Jython/Python related errors, please see [this issue](https://github.com/Triforce1/Icew1nd/issues/2) or [this repo](https://github.com/PythEch/pymobiledevice)
 
 <span id="features">What can it do?</span>
 ---------------
