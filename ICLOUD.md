@@ -113,7 +113,7 @@ Decryption Process
     <td>https://p##-mobilebackup.icloud.com/mbs/&lt;DsPrsID&gt;/&lt;UDID&gt;/&lt;SnapshotID&gt;/getFiles</td>
     <td><b><em>This</em> is where I'm stuck. I have no idea how to get any of this without restoring.</b></td>
     <td>File Auth tokens (fileAuthToken)</td>
-    <td>If anybody is willing to restore a jailbreakable device, let me know ASAP! This part of the project is stopping me from continuing on.</td>
+    <td>If anybody is willing to restore a jailbreakable A4 device, let me know ASAP! This part of the project is stopping me from continuing on.</td>
 </tr>
 <tr>
     <td>8</td>
@@ -185,6 +185,6 @@ Useful links
 
 + The following links might aid you in understanding the way iCloud and iTunes encrypt their backups
 + [Cracking and Analyzing Apple iCloud](http://www.cansecwest.com/slides/2013/Cracking%20and%20Analyzing%20Apple%20iCloud.ppt)
-+ [iTunes Backup Decrption](http://www.exploit-db.com/wp-content/themes/exploit/docs/19767.pdf)
++ [iTunes Backup Decryption](http://www.exploit-db.com/wp-content/themes/exploit/docs/19767.pdf)
 + [iPhone Wiki Page](http://theiphonewiki.com/wiki/ITunes_Backup)
 + [MBDB Decryption Script (Python)](http://code.google.com/p/iphone-dataprotection/source/browse/python_scripts/backups/backup4.py)
