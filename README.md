@@ -6,7 +6,7 @@ Icew1nd
 Announcements:
 --------------
 
-+ If anybody is willing to restore a jailbreakable A4 device, let me know ASAP! This part of the project is stopping me from continuing on.
++ If anybody is willing to restore a jailbreakable A4 device, let me know ASAP! This part of the project is stopping me from continuing on. You can email me at alex@alexhulbert.com
 + Have an A5 device? You can beta test the App/Data portion of this project! Just let me know [here](https://github.com/Triforce1/Icew1nd/issues/2).
 
 Table of Contents:
