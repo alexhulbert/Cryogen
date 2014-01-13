@@ -12,14 +12,14 @@ ______
 I still need these people:  
 ==========================
 
-Cryptography/Networking Programmer: __NEEDED!!!__  
--------------------------------------------------
+Cryptography/Networking Programmer: _NEEDED!!!_
+-----------------------------------------------
 + __Required:__ experience with Java and Python  
 + __Required:__ experience with SSL, certificates, and sockets  
 + _Recommended:_ experience with bouncycastle or other cryptography libraries for Java
 
-Beta Testers (3+): __NEEDED!!!__
---------------------------------
+Beta Testers (3+): _NEEDED!!!_
+------------------------------
 + _Optional:_ the latest generation of devices (iPhone 5S/5C) 
 + _Optional:_ recent generations of iPads (2-air)
 + _Optional:_ old devices with iOS 5
@@ -27,7 +27,7 @@ Beta Testers (3+): __NEEDED!!!__
 Here's the list of people already helping:
 ==========================================
 
-Main Programmer/Manager: [Me](https://github.com/triforce1):)
+Main Programmer/Manager: [Me](https://github.com/triforce1) :)
 - iCloud Portion: [Jurriaan](https://github.com/jurriaan)
 - GUI/Graphics: [Adisai1](http://www.reddit.com/user/adisai1)
 - Libimobiledevice/nonjailbroken: [PythEch](https://github.com/pythech)
