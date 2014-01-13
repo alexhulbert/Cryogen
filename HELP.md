@@ -18,16 +18,25 @@ Cryptography/Networking Programmer: _NEEDED!!!_
 + __Required:__ experience with SSL, certificates, and sockets  
 + _Recommended:_ experience with bouncycastle or other cryptography libraries for Java
 
-Beta Testers (3+): _NEEDED!!!_
-------------------------------
-+ _Optional:_ the latest generation of devices (iPhone 5S/5C) 
-+ _Optional:_ recent generations of iPads (2-air)
+Beta Testers:
+-------------
++ ~~_Optional:_ the latest generation of devices (iPhone 5S/5C)~~
++ _Optional:_ recent generations of iPads (1-air)
 + _Optional:_ old devices with iOS 5
+
 
 Here's the list of people already helping:
 ==========================================
 
-Main Programmer/Manager: [Me](https://github.com/triforce1) :)
+Current Beta Testers:
+---------------------
++ [Blackpoweraide](http://www.reddit.com/user/blackpoweraide) - iPad 1st gen w/ iOS 5
++ [CaterpillarPromise](http://www.reddit.com/user/CaterpillarPromise) - iPhone 5S w/ iOS 7
++ [Lyinsteve](http://www.reddit.com/user/lyinsteve) - iPad mini (non-retina)
+
+Current Developers:
+-------------------
+- Main Programmer/Manager: [Me](https://github.com/triforce1) :)
 - iCloud Portion: [Jurriaan](https://github.com/jurriaan)
 - GUI/Graphics: [Adisai1](http://www.reddit.com/user/adisai1)
 - Libimobiledevice/nonjailbroken: [PythEch](https://github.com/pythech)
