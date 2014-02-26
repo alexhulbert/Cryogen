@@ -6,7 +6,6 @@ Icew1nd
 Announcements:
 --------------
 
-+ __Someone with knowledge on cryptography, Sockets, Python, and Java needed! We need to reimplement a socket/X509 API in Java.__
 + If anybody is willing to restore a jailbreakable A4 device, let me know ASAP! This part of the project is stopping me from continuing on. You can email me at alex@alexhulbert.com
 + Have an A5 device? You can beta test the App/Data portion of this project! Just let me know [here](https://github.com/Triforce1/Icew1nd/issues/2).
 
@@ -49,14 +48,14 @@ __Current Status:__
 
 <pre>
 iCloud        {++++++---} 60%
-Data Backup   {++-------} 20%
-Data Restore  {+++------} 30%
-App Backup    {+++------} 30%
+Data Backup   {+++++----} 50%
+Data Restore  {+++++----} 50%
+App Backup    {+++++----} 50%
 App Restore   {+++++----} 50%
 Plist Editor  {---------}  0%
 Cydia Restore {+--------} 10%
 Cydia Backup  {+--------} 10%
-OVERALL       [===>     ] 30%
+OVERALL       [====>    ] 40%
 </pre>
 
 
@@ -109,26 +108,25 @@ Here is a table
 + A handy table depicting this process can be found [here](./ICLOUD.md).
 
 <h4>Manual data backup</h4>
-+ The The backup process will start off by checking if the device is in DFU Mode. If it is, it will load on an SSH Ramdisk using [msftguy's JSyringe and SSH Ramdisk](https://github.com/msftguy/ssh-rd)
++ The backup process will start off by checking if the device is in DFU Mode. If it is, it will load on an SSH Ramdisk using [msftguy's JSyringe and SSH Ramdisk](https://github.com/msftguy/ssh-rd)
 + Then, disk0s1s1 and disk0s1s2 will be mounted on the DFU device (if necessary)
 + The SSH connection (DFU ramdisk or usb tunnel) will be mounted onto the computer directly.
 + The data in /var/mobile/Applications will be stored in folders containing the apps' bundle ids
 + This will all be zipped into a file which can then later be restored using this program
 + If the device _isn't_ in DFU, then it will have to find an alternate, non-jailbreak-dependant method for backing up apps.
 + I think that all the important info _should_ be in the "Documents" folder, which I'm pretty sure is publically accessable
-+ If the whole non-jailbroken data backup thing is too complicated, I can just tell the user to back up to iCloud. That should work.
++ (See <a href="#manual-appdata-restore">"Manual app/data restore"</a> for Info on non-jailbroken backup
 
 <h4>Manual app backup</h4>
-+ The only trick to this one is repacking your apps into ipas (this should be easy, as it is already done by dozens of programs).
-+ You can see the script for doing this [here](./code/AppBackup.sh).
++ (See <a href="#manual-appdata-restore">"Manual app/data restore"</a> for Info on non-jailbroken backup
++ You can see the script for doing this (DFU/Jailbroken) [here](./code/AppBackup.sh).
 + It also might be important to note that this should also be done over SSH with an alternate root if the device is in DFU.
 
 <h4>Manual app/data restore</h4>
 + The data restore process will be almost exactly like the iCloud one, only there is no prefix.
 + The _app_ restoration will be different, however. It will need to load the ipas onto the device, ignoring or updating duplicates.
-+ All app restoration will be done using parts of code from [ios-driver](https://www.github.com/ios-driver/ios-driver) and, cosequently, libimobiledevice.
-+ I'm not exactly sure how this will be done, but more information will be added as I learn it.
-+ Programs/Apps such as "[25pp](pro.25pp.com)" can do this already, so it shouldn't be too difficult.
++ All app restoration will be done using a Jython port of pymobiledevice (which, in turn, is a port of libimobiledevice).
++ [this repo](https://github.com/pythech/pymobiledevice)provides in-depth information on how most of the non-jailbroken stuff works. 
 
 <h4>Metadata Manager</h4>
 + Finally, the program will need to parse itunesmetadata.plist.
