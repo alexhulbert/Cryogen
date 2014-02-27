@@ -5,6 +5,7 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>Icewind</name>
             <source-roots>
+                <root id="src.python.dir" name="Pymobiledevice"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>
