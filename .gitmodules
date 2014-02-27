@@ -1,0 +1,3 @@
+[submodule "Icewind/python/pymobiledevice"]
+	path = Icewind/python/pymobiledevice
+	url = git://github.com/PythEch/pymobiledevice.git
