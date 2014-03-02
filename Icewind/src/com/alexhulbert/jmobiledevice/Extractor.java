@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.zip.*;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Code that can extract a directory of files from within a jar file on the classpath
@@ -90,8 +91,7 @@ public class Extractor {
         } else if(dirURL == null) {
             throw new IllegalStateException("can't find " + sourceDirectory + " on the classpath");
         } else {
-            // not a "jar" protocol URL
-            throw new IllegalStateException("don't know how to handle extracting from " + dirURL);
+            FileUtils.copyDirectory(new File(dirURL.getFile()), new File(writeDirectory));
         }
     }
 

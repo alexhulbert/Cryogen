@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicLong;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -26,7 +27,9 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class Utils {
     
-    final protected static char[] hexArray = "0123456789abcdef".toCharArray();
+    private final static char[] hexArray = "0123456789abcdef".toCharArray();
+    private static final AtomicLong LAST_TIME_MS = new AtomicLong();
+    
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         int v;
@@ -36,6 +39,29 @@ public class Utils {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+    
+    public static String unique() {
+        long now = System.currentTimeMillis();
+        while(true) {
+            long lastTime = LAST_TIME_MS.get();
+            if (lastTime >= now) {
+                now = lastTime+1;
+            }
+            if (LAST_TIME_MS.compareAndSet(lastTime, now)) {
+                return String.valueOf(now)
+                        .replace('0', 'a')
+                        .replace('1', 'b')
+                        .replace('2', 'c')
+                        .replace('3', 'd')
+                        .replace('4', 'e')
+                        .replace('5', 'f')
+                        .replace('6', 'g')
+                        .replace('7', 'h')
+                        .replace('8', 'i')
+                        .replace('9', 'j');
+            }
+        }
     }
     
     public static Map<String, String> getIcpHeaders() {
@@ -48,8 +74,6 @@ public class Utils {
         icph.put("X-Apple-MBS-Protocol-Version", "1.7"); //Anything higher than 1.7 will not give you the X-MobileMe-AuthToken
         icph.put("X-MMe-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
         return icph;
-        //xmlwise.Plist pl = new xmlwise.Plist();
-        //pl.
     }
     
     public static Map<String, String> getIcpHeaders(Map<String, String> headers) {
