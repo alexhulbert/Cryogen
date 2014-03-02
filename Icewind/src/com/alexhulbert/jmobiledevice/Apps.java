@@ -4,6 +4,6 @@ package com.alexhulbert.jmobiledevice;
  *
  * @author Taconut
  */
-public class Apps {
+public class Apps extends Wrapper {
 
 }

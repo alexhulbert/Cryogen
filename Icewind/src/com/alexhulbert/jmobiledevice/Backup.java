@@ -4,6 +4,6 @@ package com.alexhulbert.jmobiledevice;
  *
  * @author Taconut
  */
-public class Backup {
+public class Backup extends Wrapper {
 
 }

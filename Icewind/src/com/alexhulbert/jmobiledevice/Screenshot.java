@@ -4,6 +4,6 @@ package com.alexhulbert.jmobiledevice;
  *
  * @author Taconut
  */
-public class Screenshot {
+public class Screenshot extends Wrapper {
 
 }
