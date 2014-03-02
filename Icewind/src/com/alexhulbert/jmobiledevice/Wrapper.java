@@ -1,6 +1,5 @@
 package com.alexhulbert.jmobiledevice;
 
-import com.alexhulbert.icewind.Utils;
 import static com.alexhulbert.jmobiledevice.Pymobiledevice.pi;
 import org.python.core.PyObject;
 

@@ -1,7 +1,7 @@
 package com.alexhulbert.jmobiledevice;
 
-import com.alexhulbert.icewind.Utils;
 import static com.alexhulbert.jmobiledevice.Pymobiledevice.pi;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.python.core.PyObject;
@@ -56,7 +56,7 @@ public class Shell extends Wrapper {
     
     /**
      * Runs shell code on an iDevice
-     * Valid commands are: pwd, ln, ls, cat, cd, rm, push, pull, info, mkdir, and rm
+     * Valid commands are: pwd, ln, ls, cat, cd, mv, push, pull, info, about, mkdir, rmdir, and rm
      * @param code Shell code to run
      * @return The outputs of each command
      */
@@ -140,8 +140,8 @@ public class Shell extends Wrapper {
      * @param local The destination file
      * @param remote The file to copy
      */
-    public void pull(String remote, String local) {
-        pull(remote + " " + local);
+    public void pull(String remote, File local) {
+        pull(remote + " " + local.getPath().replace("\\", "\\\\"));
     }
     
     /**
@@ -158,12 +158,12 @@ public class Shell extends Wrapper {
      * @param local  Where the file on the computer is located
      * @param remote Where to put the file on the iDevice
      */
-    public void push(String local, String remote) {
-        pi.exec(id + ".do_push('" + remote + " " + local + "')");
+    public void push(File local, String remote) {
+        pi.exec(id + ".do_push('" + remote + " " + local.getPath().replace("\\", "\\\\") + "')");
     }
     
     /**
-     * Hexdump
+     * Dumps the hex of a file
      * @param fileName The file to view the hex of
      * @return The file in raw hex
      */
@@ -185,5 +185,31 @@ public class Shell extends Wrapper {
      */
     public String info() {
         return pi.eval(id + ".do_infos('')").toString();
+    }
+    
+    /**
+     * Recursively Removes a directory
+     * @param dirName Directory to remove
+     */
+    public void rmdir(String dirName) {
+        pi.exec(id + ".do_rmdir('" + dirName + "')");
+    }
+    
+    /**
+     * Renames or moves a file
+     * @param oldName File to rename/move
+     * @param newName New name/path for the file
+     */
+    public void mv(String oldName, String newName) {
+        pi.exec(id + ".do_mv('" + oldName + " " + newName + "')");
+    }
+
+    /**
+     * Gets information about a specific file
+     * @param fileName The file to get information about
+     * @return Info about the file
+     */
+    public String about(String fileName) {
+        return pi.eval(id + ".do_about('" + fileName + "')").toString();
     }
 }

@@ -25,7 +25,6 @@ public class Pymobiledevice {
         try {
             new Extractor("/pymobiledevice", "./tmp/pymobiledevice");
             pi = new PythonInterpreter();
-            pi.exec("isEmbedded='true'");
             pi.exec("import sys");
             
             File[] libs = new File("./tmp/pymobiledevice/jar").listFiles(new FilenameFilter() {
