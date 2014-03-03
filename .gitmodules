@@ -1,3 +1,7 @@
 [submodule "Icewind/python/pymobiledevice"]
 	path = Icewind/python/pymobiledevice
-	url = git://github.com/PythEch/pymobiledevice.git
+	url = https://github.com/PythEch/pymobiledevice.git
+[submodule "Icewind/src/com/alexhulbert/jmobiledevice"]
+	path = Icewind/src/com/alexhulbert/jmobiledevice
+	url = https://github.com/Triforce1/JMobileDevice.git
+	branch = code
