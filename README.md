@@ -6,8 +6,7 @@ Icew1nd
 Announcements:
 --------------
 
-+ If anybody is willing to restore a jailbreakable A4 device, let me know ASAP! This part of the project is stopping me from continuing on. You can email me at alex@alexhulbert.com
-+ Have an A5 device? You can beta test the App/Data portion of this project! Just let me know [here](https://github.com/Triforce1/Icew1nd/issues/2).
++ None right now :)
 
 Table of Contents:
 ------------------
@@ -16,6 +15,7 @@ Table of Contents:
 + <a href="#current-status">Status</a>
 + <a href="#what-can-it-do">What can it do?</a>
 + <a href="#contributing">Contributing</a>
++ <a href="#license">License</a>
 + <a href="#how-will-it-work">How will it work?</a>
   + <a href="#manual-icloud-restore">iCloud</a>
   + <a href="#manual-data-backup">Data Backup</a>
@@ -40,22 +40,22 @@ What is Icew1nd?
 ---------------
 
 __Current Tasks:__
-+ Finding someone with an A4 device they're willing to wipe (for getFiles)
-+ Trying to fix pymobiledevice-Jython compatibility (OOM on sockets)
-+ GUI prototyping (Adisai)
++ GUI Prototyping
++ JMobileDevice
++ iCloud Stuff
 
 __Current Status:__
 
 <pre>
-iCloud        {++++++---} 60%
-Data Backup   {+++++----} 50%
-Data Restore  {+++++----} 50%
-App Backup    {+++++----} 50%
-App Restore   {+++++----} 50%
-Plist Editor  {---------}  0%
-Cydia Restore {+--------} 10%
-Cydia Backup  {+--------} 10%
-OVERALL       [====>    ] 40%
+iCloud        {++++++----}  60%
+Data Backup   {+++++-----}  50%
+Data Restore  {+++++-----}  50%
+App Backup    {++++++----}  60%
+App Restore   {++++++----}  60%
+Plist Editor  {----------}   0%
+Cydia Restore {+---------}  10%
+Cydia Backup  {+---------}  10%
+OVERALL       [====>     ]  40%
 </pre>
 
 
@@ -90,7 +90,13 @@ if (this.user[0].codingStyle.toLowerCase() == "correct") {
     me.setHappiness(false);
 }
 ```
-+ Since this is open source, you can pretty much do whatever you want with it. Just follow the [license](LICENSE.md).
+
+License
+-------
+
++ You can do basically anything you want with this, just follow these guidelines when redistributing my software
+  + Follow the [license](LICENSE.md).
+  + Include my donate button when distributing binaries of Icew1nd (when its done, of course)
 
 How will it work?
 -----------------
