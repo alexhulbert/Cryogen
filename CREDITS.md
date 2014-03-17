@@ -1,30 +1,30 @@
 Credits
 =======
 
-iCEW1ND
+Icew1nd
 -------
 
 Programming
 -----------
 
-Taconut  
+Taconut (yay!)  
 
 Gui
 ---
-Graphic Design - Adisai 
+Graphic Design - Adisai (...?)  
   
 iH8Sn0w - Inspiration  
 
 iCloud
 ------
-Jurriaan - Showing me how protocol buffers and other various parts of iCloud work  
+Jurriaan - Reverse engineering a lot of iCloud-related stuff  
   
 Elcomsoft - Inspiration and information on how icloud is decrypted  
 Tcurdt - Helping me and giving me some pointers on iCloud's  decryption process  
 
 App/Data
 --------
-PythEch - Showing me how to backup/restore apps and getting pymobiledevice to work with Icew1nd  
+PythEch - Porting libimobiledevice to Jython and porting Python sockets Java  
   
 GotoHack - Porting libimobiledevice to Python  
 Libimobiledevice - Providing an API for managing iOS devices programatically  
@@ -39,8 +39,8 @@ JCraft - JSCH (SSHing, SCP, etc.)
 MSFTGuy - JSyringe and SSH Ramdisk  
 Chronic Dev - Syringe  
 Planetbeing - XPwn  
-Google - ProtoBuf libraries and protoc  
+Google - ProtoBuf libraries and Gson 
 _______
 
 Apple - for iCloud and iOS  
-Oracle - for Java  
+Oracle - for Java/JavaFX  
