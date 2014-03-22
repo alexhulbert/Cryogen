@@ -49,66 +49,73 @@ message Key {
 	required string data = 2;
 }
 
-message fileAuth { //POST this to "authorizeGet"
-	required authChunk main = 1;
+message GetFiles { //POST this to getFiles, get an AuthChunk in response
+	required bytes hash = 1;
 }
 
-message authChunk {
-	required bytes chunkID = 1; //First in header
+message FileAuth { //POST this to "authorizeGet"
+	required AuthChunk main = 1;
+}
+
+message AuthChunk { //Also response of getFiles
+	required bytes checksum = 1; //First in header
 	required string authToken = 2; //Second in header
 }
 
-message authorizeGet { //Response from "authorizeGet"
-	required fileData data = 1;
-	required int32 unknown = 2; //Usually 2
+message AuthorizeGet { //Response from "authorizeGet"
+	required FileChecksumStorageHostChunkLists data = 1;
+	required int32 verbosity = 2; //Usually 2
 }
 
-message fileData {
-	required downloadData main = 1;
-	required otherData unknown = 2;
+message FileChecksumStorageHostChunkLists {
+	repeated StorageHostChunkList storage_host_chunk_list = 1;
+	repeated FileChecksumChunkReferences file_checksum_chunk_ref_list = 2;
 }
 
-message downloadData { //Contains info needed for downloading chunks
-	required request Request = 1;
-	required unknownHex unknown1 = 2;
-	required string unknown2 = 3; //base64?
-	required string unknown3 = 4;
-}
-.
-message unknownHex { //I have no clue what any of this is
-	required bytes unknown1 = 1; //An ID of some sort?
-	required unknownHex2 unknown2 = 2;
-	required int64 unknown3 = 3;
+message StorageHostChunkList { //Contains info needed for downloading chunks
+	required Request host_info = 1;
+	repeated ChunkInfo chunk_info = 2;
+	required string storage_container_key = 3;
+	required string storage_container_authorization_token = 4;
 }
 
-message unknownHex2 { //(See unknownHex)
-	required bytes hex1 = 0;
-	required int32 unknown1 = 7;
-	required bytes hex2 = 13;
-	
-message otherData {
-	required bytes chunkID = 1; //First in header; Same as in fileAuth
-	required zeroZero unknown = 2;
+message ChunkInfo {
+	required bytes chunk_checksum = 1;
+	//optional EncryptionKey chunk_encryption_key = 2;
+	optional bytes chunk_encryption_key = 2;
+	required uint32 chunk_length = 3;
 }
 
-message zeroZero { //Both of these are usually zeros
-	required int32 firstZero = 1; //Usually 0
-	required int32 secondZero = 2; //Usually 0
+
+//message EncryptionKey {
+//	required bytes hex1 = 0;
+//	required int32 unknown1 = 7;
+//	required bytes hex2 = 13;
+//}
+
+message FileChecksumChunkReferences {
+	required bytes file_checksum = 1; //First in header; Same as first in getFiles Response
+	repeated ChunkReference chunk_references = 2;
 }
 
-message request { //This is the URL you need
-	required string host = 1;
-	required string port = 2;
-	required string type = 3;
-	required string path = 4;
-	required string protocol = 5; //"HTTP"
-	required string protoVer = 6; //1.1
-	required string protoPrefix = 7; //"http"
-	repeated header headers = 8;
-	required string unknown = 9; //s3_us_ore
+message ChunkReference {
+	required uint64 container_index = 1;
+	required uint64 chunk_index = 2; 
 }
 
-message header { //This is a header to be used when downloading chunks
+message Request { //This is the response of autorizeGet
+	required string hostname = 1;
+	required uint32 port = 2;
+	required string method = 3;
+	required string uri = 4;
+	required string transport_protocol = 5; //"HTTP"
+	required string transport_protocol_version = 6; //1.1
+	required string scheme = 7; //"http"
+	repeated Header headers = 8;
+	optional string provider = 9; //s3_us_ore
+}
+
+message Header { //This is a header to be used when downloading chunks
 	required string key = 1;
 	required string value = 2;
 }
