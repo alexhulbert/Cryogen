@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="pane" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alexhulbert.icewind.gui.SplashController">
+  <stylesheets>
+        <URL value="@Icew1nd.css" />
+    </stylesheets>
+    <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints percentHeight="27.5" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" percentHeight="7.5" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" percentHeight="12.5" prefHeight="30.0" vgrow="SOMETIMES" />
+<RowConstraints minHeight="10.0" percentHeight="7.5" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+<children><Label alignment="CENTER" prefHeight="Infinity" prefWidth="Infinity" text="Icew1nd" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+<font>
+<Font name="Roboto Thin" size="84.0" />
+</font></Label><Label fx:id="leftLabel" alignment="TOP_CENTER" contentDisplay="TOP" prefHeight="Infinity" prefWidth="Infinity" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
+<font>
+<Font name="Roboto Thin" size="42.0" />
+</font></Label><Label fx:id="rightLabel" alignment="TOP_CENTER" prefHeight="Infinity" prefWidth="Infinity" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="3">
+<font>
+<Font name="Roboto Thin" size="42.0" />
+</font>
+</Label>
+<StackPane fx:id="donateCase" GridPane.columnIndex="1" GridPane.rowIndex="5">
+<children><Button fx:id="donate" mnemonicParsing="false" onMouseClicked="#chaching" prefHeight="Infinity" prefWidth="Infinity" styleClass="goldenrod" text="Donate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+</children>
+</StackPane>
+<StackPane fx:id="skipCase" GridPane.columnIndex="2" GridPane.rowIndex="5">
+<children><Button fx:id="skip" mnemonicParsing="false" onMouseClicked="#next" prefHeight="Infinity" prefWidth="Infinity" text="Skip" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+</children>
+</StackPane><Label fx:id="centerLabel" alignment="CENTER" prefHeight="Infinity" prefWidth="Infinity" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+<font>
+<Font name="Roboto Thin" size="64.0" />
+</font></Label>
+</children>
+</GridPane>

@@ -1,0 +1,99 @@
+.background{
+    -fx-background-color: white;
+}
+
+.header{
+    -fx-font-size: 42pt;
+    -fx-font-family: "Roboto Thin";
+    -fx-text-fill: black;
+}
+
+.item-title{
+    -fx-font-size: 11pt;
+    -fx-font-family: "Roboto Thin";
+    -fx-text-fill: black;
+    -fx-opacity: 0.6;
+     
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Button                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.button,.toggle-button {
+    -fx-padding: 5 22 5 22;   
+    -fx-border-style: null; 
+    -fx-border-radius: 5;
+    -fx-border-color: #C8C7CC;
+    -fx-border-weight: 4px;
+
+    -fx-background-color: transparent;
+  
+    -fx-font-family: "Roboto Thin";
+    -fx-font-size: 24pt;
+    -fx-text-fill: #157DFB;
+}
+
+.button:hover,.toggle-button:hover {
+    -fx-background-color: #ECE9EE;
+}
+
+.button:focused,.button:default:focused,.toggle-button:focused {
+    -fx-border-width: 1;
+    -fx-border-style: segments(1, 1);
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;   
+}
+
+.button:disabled,.toggle-button:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.button:default,.toggle-button:selected {
+    -fx-padding: 5 22 5 22;   
+    -fx-background-radius: 12.5;
+    -fx-background-color: #157DFB;
+    -fx-text-fill: white;
+}
+
+.button:default:hover,.toggle-button:selected:hover {
+    -fx-background-color: #2D94FB;
+}
+
+.toggle-button {
+    -fx-border-radius: 5;
+}
+
+.button:pressed,.button:default:hover:pressed,.toggle-button:hover:pressed {
+  -fx-text-fill: #C8C7CC;
+}
+
+#BackBtn {
+    -fx-font-size: 20;
+}
+
+.goldenrod {
+    -fx-padding: 5 22 5 22;   
+    -fx-border-style: null; 
+    -fx-background-radius: 12.5;
+    -fx-border-radius: 10;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+
+    -fx-background-color: #DAA520;
+  
+    -fx-font-family: "Roboto Thin";
+    -fx-font-size: 36pt;
+    -fx-font-weight: BOLD;
+    -fx-text-fill: #FFE05A;
+}
+
+.goldenrod:hover {
+    -fx-background-color: #EBB732;
+}
+
+.goldenrod:pressed {
+    -fx-background-color: #D39E19;
+    -fx-text-fill: #FDFD7B;
+}

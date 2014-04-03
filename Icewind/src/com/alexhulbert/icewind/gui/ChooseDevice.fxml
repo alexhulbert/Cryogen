@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="pane" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alexhulbert.icewind.gui.ChooseDeviceController">
+    <stylesheets>
+        <URL value="@Icew1nd.css" />
+    </stylesheets>
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="9.0" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.5" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.5" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.5" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="5.5" prefWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="9.0" prefWidth="10.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="37.5" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="12.5" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Button mnemonicParsing="false" onMouseClicked="#debug" prefHeight="Infinity" prefWidth="Infinity" text="iCloud" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="Infinity" prefWidth="Infinity" text="Choose a Device" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1">
+            <font>
+                <Font name="Roboto Thin" size="64.0" />
+            </font>
+        </Label>
+        <Label fx:id="NameB" alignment="CENTER" prefHeight="Infinity" prefWidth="Infinity" text="Loading..." textAlignment="CENTER" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="4">
+            <font>
+                <Font name="Roboto Thin" size="24.0" />
+            </font>
+        </Label>
+        <Line endY="-80.0" fill="#c8c8c8" startY="80.0" strokeWidth="1.5" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+            <stroke>
+                <LinearGradient endX="1.0" endY="1.0">
+                    <stops>
+                        <Stop color="TRANSPARENT" />
+                        <Stop color="#c7c7c7" offset="0.25" />
+                        <Stop color="#c7c7c7" offset="0.75" />
+                        <Stop color="TRANSPARENT" offset="1.0" />
+                    </stops>
+                </LinearGradient>
+            </stroke>
+        </Line>
+        <Line endY="-80.0" fill="#c8c8c8" startY="80.0" strokeWidth="1.5" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+            <stroke>
+                <LinearGradient endX="1.0" endY="1.0">
+                    <stops>
+                        <Stop color="TRANSPARENT" />
+                        <Stop color="#c7c7c7" offset="0.25" />
+                        <Stop color="#c7c7c7" offset="0.75" />
+                        <Stop color="TRANSPARENT" offset="1.0" />
+                    </stops>
+                </LinearGradient>
+            </stroke>
+        </Line>
+        <Line endY="-80.0" fill="#c8c8c8" startY="80.0" strokeWidth="1.5" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+            <stroke>
+                <LinearGradient endX="1.0" endY="1.0">
+                    <stops>
+                        <Stop color="TRANSPARENT" />
+                        <Stop color="#c7c7c7" offset="0.25" />
+                        <Stop color="#c7c7c7" offset="0.75" />
+                        <Stop color="TRANSPARENT" offset="1.0" />
+                    </stops>
+                </LinearGradient>
+            </stroke>
+        </Line>
+        <Line endY="-80.0" fill="#c8c8c8" startY="80.0" strokeWidth="1.5" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+            <stroke>
+                <LinearGradient endX="1.0" endY="1.0">
+                    <stops>
+                        <Stop color="TRANSPARENT" />
+                        <Stop color="#c7c7c7" offset="0.25" />
+                        <Stop color="#c7c7c7" offset="0.75" />
+                        <Stop color="TRANSPARENT" offset="1.0" />
+                    </stops>
+                </LinearGradient>
+            </stroke>
+        </Line>
+        <Button mnemonicParsing="false" prefHeight="Infinity" prefWidth="Infinity" text="My Device&#10;Isn't Listed" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+        <Button mnemonicParsing="false" onMouseClicked="#refresh" prefHeight="Infinity" prefWidth="Infinity" text="Refresh" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+<GridPane fx:id="SlotA" GridPane.columnIndex="2" GridPane.rowIndex="3">
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+</columnConstraints>
+<rowConstraints>
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+</rowConstraints>
+<children><ImageView fx:id="ImgA" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgA" opacity="0.0" GridPane.halignment="CENTER">
+<GridPane.margin>
+<Insets left="25.0" right="25.0" />
+</GridPane.margin></ProgressIndicator>
+</children>
+</GridPane>
+<GridPane fx:id="SlotB" GridPane.columnIndex="4" GridPane.rowIndex="3">
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" />
+</columnConstraints>
+<rowConstraints>
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+</rowConstraints>
+<children><ImageView fx:id="ImgB" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgB" opacity="0.0" GridPane.halignment="CENTER">
+<GridPane.margin>
+<Insets left="25.0" right="25.0" />
+</GridPane.margin></ProgressIndicator>
+</children>
+</GridPane>
+<GridPane fx:id="SlotC" GridPane.columnIndex="6" GridPane.rowIndex="3">
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" />
+</columnConstraints>
+<rowConstraints>
+<RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+</rowConstraints>
+<children><ImageView fx:id="ImgC" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgC" opacity="0.0" GridPane.halignment="CENTER">
+<GridPane.margin>
+<Insets left="25.0" right="25.0" />
+</GridPane.margin></ProgressIndicator>
+</children>
+</GridPane>
+<Label fx:id="NameA" alignment="CENTER" layoutX="286.0" layoutY="445.0" prefHeight="Infinity" prefWidth="Infinity" text="Loading..." textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
+<font>
+<Font name="Roboto Thin" size="24.0" />
+</font>
+</Label>
+<Label fx:id="NameC" alignment="CENTER" layoutX="82.0" layoutY="445.0" prefHeight="Infinity" prefWidth="Infinity" text="Loading..." textAlignment="CENTER" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="4">
+<font>
+<Font name="Roboto Thin" size="24.0" />
+</font>
+</Label>
+<StackPane fx:id="BackCase" GridPane.columnIndex="4">
+<children><Button fx:id="BackBtn" alignment="CENTER" contentDisplay="CENTER" minHeight="0.0" mnemonicParsing="false" prefHeight="Infinity" prefWidth="Infinity" text="Back" textAlignment="CENTER" GridPane.columnIndex="4" StackPane.alignment="BOTTOM_CENTER" />
+</children>
+</StackPane>
+    </children>
+</GridPane>
