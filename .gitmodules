@@ -5,3 +5,9 @@
 	path = Icewind/src/com/alexhulbert/jmobiledevice
 	url = https://github.com/Triforce1/JMobileDevice.git
 	branch = code
+[submodule "lib/Undecorator"]
+	path = lib/Undecorator
+	url = https://github.com/in-sideFX/Undecorator.git
+[submodule "Undecorator"]
+	path = Undecorator
+	url = https://github.com/Triforce1/Undecorator.git
