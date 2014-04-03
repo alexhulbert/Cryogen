@@ -1,5 +1,6 @@
 package com.alexhulbert.icewind;
 
+import com.google.protobuf.CodedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -187,4 +188,36 @@ public class iCloud {
         authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.post(Utils.getIcpHeaders(authHeaders), new HashMap<String, String>(), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);
     }
+    
+    /*public static Protobuf.Chunk[] decode_fileList(byte[] fileList) {
+        CodedInputStream chunkCounter = CodedInputStream.newInstance(fileList);
+        CodedInputStream chunkParser = CodedInputStream.newInstance(fileList);
+        int chunks = 0;
+        //get # of chunks
+        try {
+            for (chunks = 0; !chunkCounter.isAtEnd(); chunks++) {
+                try {
+                    int j = chunkCounter.readRawVarint32();
+                    chunkCounter.skipRawBytes(j);
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        } catch (IOException e) {}
+
+        Protobuf.Chunk[] files = new Protobuf.Chunk[chunks];
+        try {
+            for (int i = 0; !chunkParser.isAtEnd(); i++) {
+                try {
+                    int len = chunkParser.readRawVarint32();
+                    files[i] = Protobuf.Chunk.parseFrom(chunkParser.readRawBytes(len));
+                } catch (IOException e) {
+                    continue;
+                }
+                //prog.setValue(((i + 1)/chunks)*100);
+                //prog.setString("Parsing Chunk list: " + (((i + 1)/chunks)*100) + "% done");
+            }
+        } catch (Exception e) {}
+        return files;
+    }*/
 }
