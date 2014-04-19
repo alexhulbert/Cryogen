@@ -7,10 +7,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 
 public class ChooseDeviceController implements Initializable {
 
@@ -62,5 +63,80 @@ public class ChooseDeviceController implements Initializable {
     
     public void back() {
         StaticStage.loadScreen("Title");
+    }
+    
+    public void imgA_hover() {
+        if (ImgA.getOpacity() == 1) {
+            EasyAnimation ea = new EasyAnimation();
+            ea.push(NameA.textFillProperty(), 000, NameA.getTextFill());
+            ea.push(NameA.textFillProperty(), 100, new Color(2.0/3, 2.0/3, 2.0/3, 1));
+            ea.play();
+        }
+    }
+    
+    public void imgA_unhover() {
+        EasyAnimation ea = new EasyAnimation();
+        ea.push(NameA.textFillProperty(), 000, NameA.getTextFill());
+        ea.push(NameA.textFillProperty(), 100, new Color(0, 0, 0, 1));
+        ea.play();
+    }
+    
+    public void imgA_select() {
+        if (ImgA.getOpacity() == 1) {
+            StaticStage.dLockdown = StaticStage.devices.get(0);
+            StaticStage.dImg = new Image(StaticStage.bigImages[0]);
+            StaticStage.dName = NameA.getText();
+            StaticStage.loadScreen("Transfer");
+        }
+    }
+    
+    public void imgB_hover() {
+        if (ImgB.getOpacity() == 1) {
+            EasyAnimation ea = new EasyAnimation();
+            ea.push(NameB.textFillProperty(), 000, NameB.getTextFill());
+            ea.push(NameB.textFillProperty(), 100, new Color(2.0/3, 2.0/3, 2.0/3, 1));
+            ea.play();
+        }
+    }
+    
+    public void imgB_unhover() {
+        EasyAnimation ea = new EasyAnimation();
+        ea.push(NameB.textFillProperty(), 000, NameB.getTextFill());
+        ea.push(NameB.textFillProperty(), 100, new Color(0, 0, 0, 1));
+        ea.play();
+    }
+    
+    public void imgB_select() {
+        if (ImgB.getOpacity() == 1) {
+            StaticStage.dLockdown = StaticStage.devices.get(1);
+            StaticStage.dImg = new Image(StaticStage.bigImages[1]);
+            StaticStage.dName = NameB.getText();
+            StaticStage.loadScreen("Transfer");
+        }
+    }
+    
+    public void imgC_hover() {
+        if (ImgC.getOpacity() == 1) {
+            EasyAnimation ea = new EasyAnimation();
+            ea.push(NameC.textFillProperty(), 000, NameC.getTextFill());
+            ea.push(NameC.textFillProperty(), 100, new Color(2.0/3, 2.0/3, 2.0/3, 1));
+            ea.play();
+        }
+    }
+    
+    public void imgC_unhover() {
+        EasyAnimation ea = new EasyAnimation();
+        ea.push(NameC.textFillProperty(), 000, NameC.getTextFill());
+        ea.push(NameC.textFillProperty(), 100, new Color(0, 0, 0, 1));
+        ea.play();
+    }
+    
+    public void imgC_select() {
+        if (ImgC.getOpacity() == 1) {
+            StaticStage.dLockdown = StaticStage.devices.get(2);
+            StaticStage.dImg = new Image(StaticStage.bigImages[2]);
+            StaticStage.dName = NameC.getText();
+            StaticStage.loadScreen("Transfer");
+        }
     }
 }

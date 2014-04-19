@@ -7,11 +7,18 @@ import com.alexhulbert.jmobiledevice.Lockdown;
 import com.alexhulbert.jmobiledevice.diagnostics.Diagnostics;
 import com.alexhulbert.jmobiledevice.diagnostics.Info;
 import com.alexhulbert.jmobiledevice.diagnostics.Keys;
+import java.io.IOException;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class RefreshThread implements Runnable {
     
@@ -22,6 +29,27 @@ public class RefreshThread implements Runnable {
                 family + model,
                 isDFU ? "off" : "on"
         );
+    }
+    
+    public String bigPic(String build) {
+        String base = "http://theiphonewiki.com";
+        Document wiki;
+        try {
+            wiki = Jsoup.connect(base + "/wiki/" + build.toLowerCase()).get();
+        } catch (IOException e) {
+            return null; //Device picture not available
+        }
+        Element devicePicture = wiki.select(".thumbinner").first().select("a img").first();
+        String url = base + devicePicture.attr("src");
+        String newBase = url.substring(0, url.lastIndexOf('/') + 1);
+        Document imgs;
+        try {
+            imgs = Jsoup.connect(newBase).get();
+        } catch (IOException e) {
+            return url;
+        }
+        Element biggest = imgs.select("a").last();
+        return newBase + biggest.attr("href");
     }
     
     private final ImageView ImgA;
@@ -52,7 +80,7 @@ public class RefreshThread implements Runnable {
 
     @Override
     public void run() {
-        //Disable button
+        //TODO: Disable  back button
         devices.clear();
         
         fadeOut(ImgA, 250);
@@ -128,11 +156,14 @@ public class RefreshThread implements Runnable {
                 Keys.ProductVersion.value + //7.0.6
                 Keys.DeviceColor.value +    //black
                 Keys.DeviceClass.value +    //iPod
-                Keys.UserAssignedDeviceName.value 
+                Keys.UserAssignedDeviceName.value +
+                Keys.HWModelStr.value
         );
         String realClass = infoA.getString(Keys.DeviceClass.value);
         char[] realTypeClass = infoA.getString(Keys.ProductType.value).substring(realClass.length()).toCharArray();
         String imgUrl = devicePic(realTypeClass[0] + "," + realTypeClass[1], realClass, false); //Always 2 1-digit numbers?
+        String bigImg = bigPic(infoA.getString(Keys.HWModelStr.value));
+        StaticStage.bigImages[0] = bigImg == null ? imgUrl : bigImg;
         fadeOut(ProgA, 175);
         ImgA.setImage(new Image(imgUrl));
         Platform.runLater(new Runnable() {
@@ -155,11 +186,14 @@ public class RefreshThread implements Runnable {
                 Keys.ProductVersion.value + //7.0.6
                 Keys.DeviceColor.value +    //black
                 Keys.DeviceClass.value +    //iPod
-                Keys.UserAssignedDeviceName.value 
+                Keys.UserAssignedDeviceName.value +
+                Keys.HWModelStr.value
         );
         String realClass = infoB.getString(Keys.DeviceClass.value);
         char[] realTypeClass = infoB.getString(Keys.ProductType.value).substring(realClass.length()).toCharArray();
         String imgUrl = devicePic(realTypeClass[0] + "," + realTypeClass[1], realClass, false); //Always 2 1-digit numbers?
+        String bigImg = bigPic(infoB.getString(Keys.HWModelStr.value));
+        StaticStage.bigImages[1] = bigImg == null ? imgUrl : bigImg;
         fadeOut(ProgB, 175);
         ImgB.setImage(new Image(imgUrl));
         Platform.runLater(new Runnable() {
@@ -182,11 +216,14 @@ public class RefreshThread implements Runnable {
                 Keys.ProductVersion.value + //7.0.6
                 Keys.DeviceColor.value +    //black
                 Keys.DeviceClass.value +    //iPod
-                Keys.UserAssignedDeviceName.value 
+                Keys.UserAssignedDeviceName.value +
+                Keys.HWModelStr.value
         );
         String realClass = infoC.getString(Keys.DeviceClass.value);
         char[] realTypeClass = infoC.getString(Keys.ProductType.value).substring(realClass.length()).toCharArray();
         String imgUrl = devicePic(realTypeClass[0] + "," + realTypeClass[1], realClass, false); //Always 2 1-digit numbers?
+        String bigImg = bigPic(infoC.getString(Keys.HWModelStr.value));
+        StaticStage.bigImages[2] = bigImg == null ? imgUrl : bigImg;
         fadeOut(ProgC, 175);
         ImgB.setImage(new Image(imgUrl));
         Platform.runLater(new Runnable() {

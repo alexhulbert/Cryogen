@@ -30,19 +30,14 @@ public class SplashController implements Initializable {
     @FXML Label rightLabel;
     @FXML Label centerLabel;
     
-    Timeline timeline;
-    
-    public void tad(WritableValue p, long time, Object value) {
-        KeyValue kv = new KeyValue(p, value);
-        KeyFrame kf = new KeyFrame(Duration.millis(time), kv);
-        timeline.getKeyFrames().add(kf);
-    }
+    EasyAnimation ea;
     
     public void chaching() { //hehe :)
         //TODO: Implement donate button
     }
     
     public void next() {
+        ea.get().stop();
         StaticStage.loadScreen("Title");
     }
     
@@ -59,61 +54,60 @@ public class SplashController implements Initializable {
         
         centerLabel.setText("Taconut");
         
-        timeline = new Timeline();
-        timeline.setCycleCount(1);
+        ea = new EasyAnimation();
         
-        tad(centerLabel.opacityProperty(), 0000, 0);
-        tad(centerLabel.opacityProperty(), 2000, 0);
-        tad(centerLabel.opacityProperty(), 2750, 1);
-        tad(centerLabel.opacityProperty(), 3250, 1);
-        tad(centerLabel.opacityProperty(), 4000, 0);
+        ea.push(centerLabel.opacityProperty(), 0000, 0);
+        ea.push(centerLabel.opacityProperty(), 2000, 0);
+        ea.push(centerLabel.opacityProperty(), 2750, 1);
+        ea.push(centerLabel.opacityProperty(), 3250, 1);
+        ea.push(centerLabel.opacityProperty(), 4000, 0);
         
-        tad(  leftLabel.   textProperty(), 4000, "Pythech:\nPython Code");
-        tad( rightLabel.   textProperty(), 4000, "Jurriaan:\niCloud Stuff"); //TODO: Replace "Stuff" with a better word
-        tad(  leftLabel.opacityProperty(), 4000, 0);
-        tad( rightLabel.opacityProperty(), 4000, 0);
-        tad(  leftLabel.opacityProperty(), 4250, 0);
-        tad( rightLabel.opacityProperty(), 4250, 0);
-        tad(  leftLabel.opacityProperty(), 5000, 1);
-        tad( rightLabel.opacityProperty(), 5000, 1);
-        tad(  leftLabel.opacityProperty(), 5500, 1);
-        tad( rightLabel.opacityProperty(), 5500, 1);
-        tad(  leftLabel.opacityProperty(), 6250, 0);
-        tad( rightLabel.opacityProperty(), 6250, 0);
+        ea.push(  leftLabel.   textProperty(), 4000, "PythEch:\nPython Code");
+        ea.push( rightLabel.   textProperty(), 4000, "Jurriaan:\niCloud Stuff"); //TODO: Replace "Stuff" with a better word
+        ea.push(  leftLabel.opacityProperty(), 4000, 0);
+        ea.push( rightLabel.opacityProperty(), 4000, 0);
+        ea.push(  leftLabel.opacityProperty(), 4250, 0);
+        ea.push( rightLabel.opacityProperty(), 4250, 0);
+        ea.push(  leftLabel.opacityProperty(), 5000, 1);
+        ea.push( rightLabel.opacityProperty(), 5000, 1);
+        ea.push(  leftLabel.opacityProperty(), 5500, 1);
+        ea.push( rightLabel.opacityProperty(), 5500, 1);
+        ea.push(  leftLabel.opacityProperty(), 6250, 0);
+        ea.push( rightLabel.opacityProperty(), 6250, 0);
         
+        ea.push(centerLabel.         fontProperty(), 6250, Font.font("Roboto Thin", 24));
+        ea.push(centerLabel.    alignmentProperty(), 6250, Pos.TOP_LEFT);
+        ea.push(centerLabel.textAlignmentProperty(), 6250, TextAlignment.LEFT);
+        ea.push(centerLabel.         textProperty(), 6250, "ADISAI: Logo\nIH8SN0W: Inspiration\nLOREM: Ipsum\nBLAH: blahblah\nTHIS: is a test");
+        ea.push(centerLabel.      opacityProperty(), 6250, 0);
+        ea.push(centerLabel.      opacityProperty(), 6500, 0);
+        ea.push(centerLabel.      opacityProperty(), 7250, 1);
+        ea.push(centerLabel.      opacityProperty(), 7750, 1);
+        ea.push(centerLabel.      opacityProperty(), 8250, 0);
         
-        tad(centerLabel.         fontProperty(), 6250, Font.font("Roboto Thin", 24));
-        tad(centerLabel.    alignmentProperty(), 6250, Pos.TOP_LEFT);
-        tad(centerLabel.textAlignmentProperty(), 6250, TextAlignment.LEFT);
-        tad(centerLabel.         textProperty(), 6250, "ADISAI: Logo\nIH8SN0W: Inspiration\nLOREM: Ipsum\nBLAH: blahblah\nTHIS: is a test");
-        tad(centerLabel.      opacityProperty(), 6250, 0);
-        tad(centerLabel.      opacityProperty(), 6500, 0);
-        tad(centerLabel.      opacityProperty(), 7250, 1);
-        tad(centerLabel.      opacityProperty(), 7750, 1);
-        tad(centerLabel.      opacityProperty(), 8250, 0);
+        ea.push(centerLabel.         fontProperty(), 8250, Font.font("Roboto Thin", 64));
+        ea.push(centerLabel.    alignmentProperty(), 8250, Pos.CENTER);
+        ea.push(centerLabel.textAlignmentProperty(), 8250, TextAlignment.CENTER);
+        ea.push(centerLabel.         textProperty(), 8250, "Welcome");
+        ea.push(centerLabel.      opacityProperty(), 8250, 0);
+        ea.push(centerLabel.      opacityProperty(), 8500, 0);
+        ea.push(centerLabel.      opacityProperty(), 9250, 1);
         
-        tad(centerLabel.         fontProperty(), 8250, Font.font("Roboto Thin", 64));
-        tad(centerLabel.    alignmentProperty(), 8250, Pos.CENTER);
-        tad(centerLabel.textAlignmentProperty(), 8250, TextAlignment.CENTER);
-        tad(centerLabel.         textProperty(), 8250, "Welcome");
-        tad(centerLabel.      opacityProperty(), 8250, 0);
-        tad(centerLabel.      opacityProperty(), 8500, 0);
-        tad(centerLabel.      opacityProperty(), 9250, 1);
+        ea.push(centerLabel.      opacityProperty(),10000, 1);
+        ea.push(       skip.      opacityProperty(),10000, 1);
+        ea.push(     donate.      opacityProperty(),10000, 1);
+        ea.push(centerLabel.      opacityProperty(),10250, 0);
+        ea.push(       skip.      opacityProperty(),10250, 0);
+        ea.push(     donate.      opacityProperty(),10250, 0);
         
-        tad(centerLabel.      opacityProperty(),10000, 1);
-        tad(       skip.      opacityProperty(),10000, 1);
-        tad(     donate.      opacityProperty(),10000, 1);
-        tad(centerLabel.      opacityProperty(),10250, 0);
-        tad(       skip.      opacityProperty(),10250, 0);
-        tad(     donate.      opacityProperty(),10250, 0);
-        
-        timeline.play();
-        timeline.setOnFinished(
+        ea.finishWith(
             new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent ae) {
                     StaticStage.loadScreen("Title");
                 }
             }
         );
+        
+        ea.play();
     }
 }

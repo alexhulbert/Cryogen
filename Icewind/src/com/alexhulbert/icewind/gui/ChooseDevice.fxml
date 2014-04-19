@@ -103,7 +103,7 @@
 <rowConstraints>
 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
 </rowConstraints>
-<children><ImageView fx:id="ImgA" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgA" opacity="0.0" GridPane.halignment="CENTER">
+<children><ImageView fx:id="ImgA" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgA" onMouseClicked="#imgA_select" onMouseEntered="#imgA_hover" onMouseExited="#imgA_unhover" opacity="0.0" GridPane.halignment="CENTER">
 <GridPane.margin>
 <Insets left="25.0" right="25.0" />
 </GridPane.margin></ProgressIndicator>
@@ -116,7 +116,7 @@
 <rowConstraints>
 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
 </rowConstraints>
-<children><ImageView fx:id="ImgB" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgB" opacity="0.0" GridPane.halignment="CENTER">
+<children><ImageView fx:id="ImgB" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgB" onMouseClicked="#imgB_select" onMouseEntered="#imgB_hover" onMouseExited="#imgB_unhover" opacity="0.0" GridPane.halignment="CENTER">
 <GridPane.margin>
 <Insets left="25.0" right="25.0" />
 </GridPane.margin></ProgressIndicator>
@@ -129,7 +129,7 @@
 <rowConstraints>
 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
 </rowConstraints>
-<children><ImageView fx:id="ImgC" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgC" opacity="0.0" GridPane.halignment="CENTER">
+<children><ImageView fx:id="ImgC" fitHeight="150.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" /><ProgressIndicator fx:id="ProgC" onMouseClicked="#imgC_select" onMouseEntered="#imgC_select" onMouseExited="#imgC_unhover" opacity="0.0" GridPane.halignment="CENTER">
 <GridPane.margin>
 <Insets left="25.0" right="25.0" />
 </GridPane.margin></ProgressIndicator>
@@ -146,7 +146,7 @@
 </font>
 </Label>
 <StackPane fx:id="BackCase" GridPane.columnIndex="4">
-<children><Button fx:id="BackBtn" alignment="CENTER" contentDisplay="CENTER" minHeight="0.0" mnemonicParsing="false" prefHeight="Infinity" prefWidth="Infinity" text="Back" textAlignment="CENTER" GridPane.columnIndex="4" StackPane.alignment="BOTTOM_CENTER" />
+<children><Button fx:id="BackBtn" alignment="CENTER" contentDisplay="CENTER" minHeight="0.0" mnemonicParsing="false" onMouseClicked="#back" prefHeight="Infinity" prefWidth="Infinity" text="Back" textAlignment="CENTER" GridPane.columnIndex="4" StackPane.alignment="BOTTOM_CENTER" />
 </children>
 </StackPane>
     </children>
