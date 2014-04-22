@@ -93,7 +93,7 @@ public class RefreshThread implements Runnable {
         String[] devUdids = Lockdown.listDevices();
         for (int i = 0; i < Math.min(3, devUdids.length); i++) {
             try {
-                Lockdown ld = new Lockdown(devUdids[i].toCharArray());
+                Lockdown ld = new Lockdown(devUdids[i]);
                 devices.add(ld);
             } catch (Exception e) {
                 break;
