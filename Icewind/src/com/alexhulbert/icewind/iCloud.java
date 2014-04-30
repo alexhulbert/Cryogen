@@ -1,11 +1,16 @@
 package com.alexhulbert.icewind;
 
 import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.InvalidProtocolBufferException;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import xmlwise.Plist;
 import xmlwise.XmlParseException;
@@ -36,7 +41,7 @@ public class iCloud {
                             break;
                         }
                     }
-                    if ((listColor && aList.contains(shortName)) || (!listColor && !aList.contains(aList))) {
+                    if (listColor == aList.contains(shortName)) {
                         Log.log("Restoring data for \"" + shortName + ".app\"...");
                         try {
                             FileUtils.copyDirectory(new File(backupPath + fsep + "AppDomain-" + bid), F_UID);
@@ -119,7 +124,7 @@ public class iCloud {
      * @param mmeAuthToken The Mobile Me Authentication Token
      * @return Information about your account
      */
-    public static String get_account_settings(String dsPrsID, String mmeAuthToken) {
+    public static String getAccountInfo(String dsPrsID, String mmeAuthToken) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/get_account_settings", true);
@@ -132,7 +137,7 @@ public class iCloud {
      * @param mmeAuthToken <meAuthToken (From get_account_settings)
      * @return A list of udids linked with the account (encoded with Protobuf)
      */
-    public static byte[] get_backupudid(String pNum, String dsPrsID, String mmeAuthToken) {
+    public static byte[] listDevices(String pNum, String dsPrsID, String mmeAuthToken) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID, true);
@@ -146,7 +151,7 @@ public class iCloud {
      * @param backupUDID The udid of the device to retrieve info on
      * @return Information of the device (encoded with protobuf)
      */
-    public static byte[] get_backup_info(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
+    public static byte[] getInfo(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID, true);
@@ -160,7 +165,7 @@ public class iCloud {
      * @param backupUDID The udid of the device to retrieve info on
      * @return Keys for decrypting icloud data (encoded with protobuf)
      */
-    public static byte[] get_backup_keys(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
+    public static byte[] getKeys(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/getKeys", true);
@@ -177,47 +182,111 @@ public class iCloud {
      * @param limit Max length
      * @return A list of files to download
      */
-    public static byte[] get_files(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID, int offset, String limit) {
+    public static byte[] listFiles(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID, int offset, String limit) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset /*+ "&limit=" + limit*/, true);
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset + (limit == null ? "" : "&limit=" + limit), true);
     }
     
-    public static String get_url(String pNum, String dsPrsID, String mmeAuthToken) {
+    public static String authorizeGet(String pNum, String dsPrsID, String mmeAuthToken) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.post(Utils.getIcpHeaders(authHeaders), new HashMap<String, String>(), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);
+        return Utils.post("", Utils.getIcpHeaders(authHeaders), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);
     }
     
-    /*public static Protobuf.Chunk[] decode_fileList(byte[] fileList) {
-        CodedInputStream chunkCounter = CodedInputStream.newInstance(fileList);
-        CodedInputStream chunkParser = CodedInputStream.newInstance(fileList);
-        int chunks = 0;
-        //get # of chunks
+    public static byte[] getFiles(byte[] data, String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID) {
+        Map<String, String> authHeaders = new HashMap<String, String>();
+        authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
+        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/getFiles", true);
+    }
+    
+    public static Protobuf.File[] parseFiles(byte[] fileList) {
+        return parseFiles(fileList, null);
+    }
+    
+    public static Protobuf.File[] parseFiles(byte[] fileList, LoadingBar prog) {
+        CodedInputStream fileCounter = CodedInputStream.newInstance(fileList);
+        CodedInputStream fileParser = CodedInputStream.newInstance(fileList);
+        int numFiles = 0;
+        
+        if (prog != null) {
+            prog.activate(true);
+            prog.intermediate();
+            prog.status("Calculating File Size..."); //Just like Windows Explorer!
+        }
+        
         try {
-            for (chunks = 0; !chunkCounter.isAtEnd(); chunks++) {
+            for (numFiles = 0; !fileCounter.isAtEnd(); numFiles++) {
+                int j = fileCounter.readRawVarint32();
+                fileCounter.skipRawBytes(j);
+            }
+        } catch (IOException e) {
+            //errorhandle: Well sh[a-z]{1}t... This isn't supposed to happen.
+        }
+        
+        if (prog != null) {
+            prog.percentage();
+        }
+        
+        Protobuf.File[] files = new Protobuf.File[numFiles];
+        try {
+            for (int i = 0; !fileParser.isAtEnd(); i++) {
+                int len = fileParser.readRawVarint32();
                 try {
-                    int j = chunkCounter.readRawVarint32();
-                    chunkCounter.skipRawBytes(j);
-                } catch (IOException e) {
-                    break;
+                    files[i] = Protobuf.File.parseFrom(fileParser.readRawBytes(len));
+                } catch (InvalidProtocolBufferException ipbe) {
+                    files[i] = null;
+                    //errorhandle: REPORT THIS TO THE DEVELOPER!!! (me)
+                }
+                
+                if (prog != null) {
+                    prog.progress(((i + 1) / numFiles) * 100);
+                    prog.status("Parsing File list: " + (((i + 1) / numFiles) * 100) + "% done");
                 }
             }
-        } catch (IOException e) {}
-
-        Protobuf.Chunk[] files = new Protobuf.Chunk[chunks];
-        try {
-            for (int i = 0; !chunkParser.isAtEnd(); i++) {
-                try {
-                    int len = chunkParser.readRawVarint32();
-                    files[i] = Protobuf.Chunk.parseFrom(chunkParser.readRawBytes(len));
-                } catch (IOException e) {
-                    continue;
-                }
-                //prog.setValue(((i + 1)/chunks)*100);
-                //prog.setString("Parsing Chunk list: " + (((i + 1)/chunks)*100) + "% done");
-            }
-        } catch (Exception e) {}
+        } catch (IOException e) {
+            //errorhandle: Remember: Its always the user's fault, not the programmer's.
+        }
+        
+        if (prog != null) {
+            prog.activate(false);
+        }
         return files;
-    }*/
+    }
+    
+    public static Protobuf.AuthChunk[] parseGetFiles(byte[] getFilesResponse) {
+        CodedInputStream authCis = CodedInputStream.newInstance(getFilesResponse);
+        List<Protobuf.AuthChunk> resps = new ArrayList<Protobuf.AuthChunk>();
+        try {
+            for (int i = 0; !authCis.isAtEnd(); i++) {
+                int len = authCis.readRawVarint32();
+                try {
+                    resps.add(Protobuf.AuthChunk.parseFrom(authCis.readRawBytes(len)));
+                } catch (InvalidProtocolBufferException ipbe) {
+                    //errorhandle: What's the worst that could happen? They're just Auth tokens...
+                }
+            }
+        } catch (IOException ipbe) {
+            //errorhandle: Meh
+        }
+        return resps.toArray(new Protobuf.AuthChunk[resps.size()]);
+    }
+    
+    public static byte[] buildGetFiles(Protobuf.File[] files) {
+        ByteArrayOutputStream oust = new ByteArrayOutputStream();
+        for (Protobuf.File f : files) {
+            if (f.getFileSize() == 0) {
+                continue;
+            }
+            
+            Protobuf.GetFiles.Builder instance = Protobuf.GetFiles.newBuilder();
+            instance.setHash(f.getFileName());
+            try {
+                instance.build().writeDelimitedTo(oust);
+            } catch (IOException e) {
+                //errorhandle: I guess user's not getting they're flappy bird save.
+            }
+        }
+        return oust.toByteArray();
+    }
 }

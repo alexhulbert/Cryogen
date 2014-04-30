@@ -11,12 +11,14 @@ import java.util.Map;
 import java.util.Map.Entry;
  import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -26,6 +28,16 @@ import org.apache.http.message.BasicNameValuePair;
  */
 public class Utils {
     private final static char[] hexArray = "0123456789abcdef".toCharArray();
+    
+    /**
+     * A really sick name for a really stupid function.
+     * Yup. This does absolutely nothing at all.
+     * Call me an idiot if you want.
+     */
+    public static void oblivian() {
+        //I use this as sport for breakpoints.
+        //This is also a good control, since it should never raise an Exception (I hope)
+    }
     
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
@@ -84,6 +96,52 @@ public class Utils {
         return null;
     }
     
+    public static String post(byte[] body, Map<String, String> headers, String host, String path, boolean ssl) {
+        String content = "";
+        HttpClient dhCli = HttpClientBuilder.create().build();
+        try {
+            HttpResponse hResp = dhCli.execute(post_raw(body, headers, host, path, ssl));
+            BufferedReader br = new BufferedReader(new InputStreamReader(hResp.getEntity().getContent()));
+            
+            String line;
+            while ((line = br.readLine()) != null) {
+                content += "\n";
+                content += line;
+            }
+            if (content.length() > 1) {
+                return content.substring(1);
+            } else {
+                return null;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static String post(String body, Map<String, String> headers, String host, String path, boolean ssl) {
+        String content = "";
+        HttpClient dhCli = HttpClientBuilder.create().build();
+        try {
+            HttpResponse hResp = dhCli.execute(post_raw(body.getBytes("UTF-8"), headers, host, path, ssl));
+            BufferedReader br = new BufferedReader(new InputStreamReader(hResp.getEntity().getContent()));
+            
+            String line;
+            while ((line = br.readLine()) != null) {
+                content += "\n";
+                content += line;
+            }
+            if (content.length() > 1) {
+                return content.substring(1);
+            } else {
+                return null;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public static byte[] post_bytes(Map<String, String> params, Map<String, String> headers, String host, String path, boolean ssl) {
         HttpClient dhCli = HttpClientBuilder.create().build();
         try {
@@ -93,6 +151,41 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public static byte[] post_bytes(byte[] body, Map<String, String> headers, String host, String path, boolean ssl) {
+        HttpClient dhCli = HttpClientBuilder.create().build();
+        try {
+            HttpResponse hResp = dhCli.execute(post_raw(body, headers, host, path, ssl));
+            return IOUtils.toByteArray(hResp.getEntity().getContent());
+        } catch(IOException | IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static byte[] post_bytes(String body, Map<String, String> headers, String host, String path, boolean ssl) {
+        HttpClient dhCli = HttpClientBuilder.create().build();
+        try {
+            HttpResponse hResp = dhCli.execute(post_raw(body.getBytes("UTF-8"), headers, host, path, ssl));
+            return IOUtils.toByteArray(hResp.getEntity().getContent());
+        } catch(IOException | IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    private static HttpPost post_raw(byte[] body, Map<String, String> headers, String host, String path, boolean ssl) {
+        String protocol = ssl ? "https://" : "http://";
+        HttpPost httpPost = new HttpPost(protocol + host + path);
+        httpPost.setEntity(new ByteArrayEntity(body));
+        
+        httpPost.addHeader("Host", host);
+        for (Entry<String, String> header : headers.entrySet()) {
+            httpPost.addHeader(header.getKey(), header.getValue());
+        }
+        
+        return httpPost;
     }
     
     private static HttpPost post_raw(Map<String, String> params, Map<String, String> headers, String host, String path, boolean ssl) {
