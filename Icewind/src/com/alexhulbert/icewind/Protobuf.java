@@ -7057,19 +7057,30 @@ public final class Protobuf {
   public interface FileAuthOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required .AuthChunk main = 1;
+    // repeated .AuthChunk main = 1;
     /**
-     * <code>required .AuthChunk main = 1;</code>
+     * <code>repeated .AuthChunk main = 1;</code>
      */
-    boolean hasMain();
+    java.util.List<Protobuf.AuthChunk> 
+        getMainList();
     /**
-     * <code>required .AuthChunk main = 1;</code>
+     * <code>repeated .AuthChunk main = 1;</code>
      */
-    Protobuf.AuthChunk getMain();
+    Protobuf.AuthChunk getMain(int index);
     /**
-     * <code>required .AuthChunk main = 1;</code>
+     * <code>repeated .AuthChunk main = 1;</code>
      */
-    Protobuf.AuthChunkOrBuilder getMainOrBuilder();
+    int getMainCount();
+    /**
+     * <code>repeated .AuthChunk main = 1;</code>
+     */
+    java.util.List<? extends Protobuf.AuthChunkOrBuilder> 
+        getMainOrBuilderList();
+    /**
+     * <code>repeated .AuthChunk main = 1;</code>
+     */
+    Protobuf.AuthChunkOrBuilder getMainOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code FileAuth}
@@ -7127,16 +7138,11 @@ public final class Protobuf {
               break;
             }
             case 10: {
-              Protobuf.AuthChunk.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = main_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                main_ = new java.util.ArrayList<Protobuf.AuthChunk>();
+                mutable_bitField0_ |= 0x00000001;
               }
-              main_ = input.readMessage(Protobuf.AuthChunk.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(main_);
-                main_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000001;
+              main_.add(input.readMessage(Protobuf.AuthChunk.PARSER, extensionRegistry));
               break;
             }
           }
@@ -7147,6 +7153,9 @@ public final class Protobuf {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          main_ = java.util.Collections.unmodifiableList(main_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -7178,44 +7187,55 @@ public final class Protobuf {
       return PARSER;
     }
 
-    private int bitField0_;
-    // required .AuthChunk main = 1;
+    // repeated .AuthChunk main = 1;
     public static final int MAIN_FIELD_NUMBER = 1;
-    private Protobuf.AuthChunk main_;
+    private java.util.List<Protobuf.AuthChunk> main_;
     /**
-     * <code>required .AuthChunk main = 1;</code>
+     * <code>repeated .AuthChunk main = 1;</code>
      */
-    public boolean hasMain() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>required .AuthChunk main = 1;</code>
-     */
-    public Protobuf.AuthChunk getMain() {
+    public java.util.List<Protobuf.AuthChunk> getMainList() {
       return main_;
     }
     /**
-     * <code>required .AuthChunk main = 1;</code>
+     * <code>repeated .AuthChunk main = 1;</code>
      */
-    public Protobuf.AuthChunkOrBuilder getMainOrBuilder() {
+    public java.util.List<? extends Protobuf.AuthChunkOrBuilder> 
+        getMainOrBuilderList() {
       return main_;
+    }
+    /**
+     * <code>repeated .AuthChunk main = 1;</code>
+     */
+    public int getMainCount() {
+      return main_.size();
+    }
+    /**
+     * <code>repeated .AuthChunk main = 1;</code>
+     */
+    public Protobuf.AuthChunk getMain(int index) {
+      return main_.get(index);
+    }
+    /**
+     * <code>repeated .AuthChunk main = 1;</code>
+     */
+    public Protobuf.AuthChunkOrBuilder getMainOrBuilder(
+        int index) {
+      return main_.get(index);
     }
 
     private void initFields() {
-      main_ = Protobuf.AuthChunk.getDefaultInstance();
+      main_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasMain()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!getMain().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
+      for (int i = 0; i < getMainCount(); i++) {
+        if (!getMain(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -7224,8 +7244,8 @@ public final class Protobuf {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, main_);
+      for (int i = 0; i < main_.size(); i++) {
+        output.writeMessage(1, main_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -7236,9 +7256,9 @@ public final class Protobuf {
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      for (int i = 0; i < main_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, main_);
+          .computeMessageSize(1, main_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7362,11 +7382,11 @@ public final class Protobuf {
       public Builder clear() {
         super.clear();
         if (mainBuilder_ == null) {
-          main_ = Protobuf.AuthChunk.getDefaultInstance();
+          main_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
           mainBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
@@ -7394,16 +7414,15 @@ public final class Protobuf {
       public Protobuf.FileAuth buildPartial() {
         Protobuf.FileAuth result = new Protobuf.FileAuth(this);
         int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
         if (mainBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            main_ = java.util.Collections.unmodifiableList(main_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
           result.main_ = main_;
         } else {
           result.main_ = mainBuilder_.build();
         }
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -7419,21 +7438,42 @@ public final class Protobuf {
 
       public Builder mergeFrom(Protobuf.FileAuth other) {
         if (other == Protobuf.FileAuth.getDefaultInstance()) return this;
-        if (other.hasMain()) {
-          mergeMain(other.getMain());
+        if (mainBuilder_ == null) {
+          if (!other.main_.isEmpty()) {
+            if (main_.isEmpty()) {
+              main_ = other.main_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMainIsMutable();
+              main_.addAll(other.main_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.main_.isEmpty()) {
+            if (mainBuilder_.isEmpty()) {
+              mainBuilder_.dispose();
+              mainBuilder_ = null;
+              main_ = other.main_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              mainBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getMainFieldBuilder() : null;
+            } else {
+              mainBuilder_.addAllMessages(other.main_);
+            }
+          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasMain()) {
-          
-          return false;
-        }
-        if (!getMain().isInitialized()) {
-          
-          return false;
+        for (int i = 0; i < getMainCount(); i++) {
+          if (!getMain(i).isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -7457,116 +7497,239 @@ public final class Protobuf {
       }
       private int bitField0_;
 
-      // required .AuthChunk main = 1;
-      private Protobuf.AuthChunk main_ = Protobuf.AuthChunk.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          Protobuf.AuthChunk, Protobuf.AuthChunk.Builder, Protobuf.AuthChunkOrBuilder> mainBuilder_;
-      /**
-       * <code>required .AuthChunk main = 1;</code>
-       */
-      public boolean hasMain() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+      // repeated .AuthChunk main = 1;
+      private java.util.List<Protobuf.AuthChunk> main_ =
+        java.util.Collections.emptyList();
+      private void ensureMainIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          main_ = new java.util.ArrayList<Protobuf.AuthChunk>(main_);
+          bitField0_ |= 0x00000001;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          Protobuf.AuthChunk, Protobuf.AuthChunk.Builder, Protobuf.AuthChunkOrBuilder> mainBuilder_;
+
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
        */
-      public Protobuf.AuthChunk getMain() {
+      public java.util.List<Protobuf.AuthChunk> getMainList() {
         if (mainBuilder_ == null) {
-          return main_;
+          return java.util.Collections.unmodifiableList(main_);
         } else {
-          return mainBuilder_.getMessage();
+          return mainBuilder_.getMessageList();
         }
       }
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
        */
-      public Builder setMain(Protobuf.AuthChunk value) {
+      public int getMainCount() {
+        if (mainBuilder_ == null) {
+          return main_.size();
+        } else {
+          return mainBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Protobuf.AuthChunk getMain(int index) {
+        if (mainBuilder_ == null) {
+          return main_.get(index);
+        } else {
+          return mainBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Builder setMain(
+          int index, Protobuf.AuthChunk value) {
         if (mainBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          main_ = value;
+          ensureMainIsMutable();
+          main_.set(index, value);
           onChanged();
         } else {
-          mainBuilder_.setMessage(value);
+          mainBuilder_.setMessage(index, value);
         }
-        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
        */
       public Builder setMain(
+          int index, Protobuf.AuthChunk.Builder builderForValue) {
+        if (mainBuilder_ == null) {
+          ensureMainIsMutable();
+          main_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          mainBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Builder addMain(Protobuf.AuthChunk value) {
+        if (mainBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMainIsMutable();
+          main_.add(value);
+          onChanged();
+        } else {
+          mainBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Builder addMain(
+          int index, Protobuf.AuthChunk value) {
+        if (mainBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMainIsMutable();
+          main_.add(index, value);
+          onChanged();
+        } else {
+          mainBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Builder addMain(
           Protobuf.AuthChunk.Builder builderForValue) {
         if (mainBuilder_ == null) {
-          main_ = builderForValue.build();
+          ensureMainIsMutable();
+          main_.add(builderForValue.build());
           onChanged();
         } else {
-          mainBuilder_.setMessage(builderForValue.build());
+          mainBuilder_.addMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
        */
-      public Builder mergeMain(Protobuf.AuthChunk value) {
+      public Builder addMain(
+          int index, Protobuf.AuthChunk.Builder builderForValue) {
         if (mainBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              main_ != Protobuf.AuthChunk.getDefaultInstance()) {
-            main_ =
-              Protobuf.AuthChunk.newBuilder(main_).mergeFrom(value).buildPartial();
-          } else {
-            main_ = value;
-          }
+          ensureMainIsMutable();
+          main_.add(index, builderForValue.build());
           onChanged();
         } else {
-          mainBuilder_.mergeFrom(value);
+          mainBuilder_.addMessage(index, builderForValue.build());
         }
-        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Builder addAllMain(
+          java.lang.Iterable<? extends Protobuf.AuthChunk> values) {
+        if (mainBuilder_ == null) {
+          ensureMainIsMutable();
+          super.addAll(values, main_);
+          onChanged();
+        } else {
+          mainBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
        */
       public Builder clearMain() {
         if (mainBuilder_ == null) {
-          main_ = Protobuf.AuthChunk.getDefaultInstance();
+          main_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
           mainBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
        */
-      public Protobuf.AuthChunk.Builder getMainBuilder() {
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return getMainFieldBuilder().getBuilder();
+      public Builder removeMain(int index) {
+        if (mainBuilder_ == null) {
+          ensureMainIsMutable();
+          main_.remove(index);
+          onChanged();
+        } else {
+          mainBuilder_.remove(index);
+        }
+        return this;
       }
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
        */
-      public Protobuf.AuthChunkOrBuilder getMainOrBuilder() {
-        if (mainBuilder_ != null) {
-          return mainBuilder_.getMessageOrBuilder();
-        } else {
-          return main_;
+      public Protobuf.AuthChunk.Builder getMainBuilder(
+          int index) {
+        return getMainFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Protobuf.AuthChunkOrBuilder getMainOrBuilder(
+          int index) {
+        if (mainBuilder_ == null) {
+          return main_.get(index);  } else {
+          return mainBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>required .AuthChunk main = 1;</code>
+       * <code>repeated .AuthChunk main = 1;</code>
        */
-      private com.google.protobuf.SingleFieldBuilder<
+      public java.util.List<? extends Protobuf.AuthChunkOrBuilder> 
+           getMainOrBuilderList() {
+        if (mainBuilder_ != null) {
+          return mainBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(main_);
+        }
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Protobuf.AuthChunk.Builder addMainBuilder() {
+        return getMainFieldBuilder().addBuilder(
+            Protobuf.AuthChunk.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public Protobuf.AuthChunk.Builder addMainBuilder(
+          int index) {
+        return getMainFieldBuilder().addBuilder(
+            index, Protobuf.AuthChunk.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .AuthChunk main = 1;</code>
+       */
+      public java.util.List<Protobuf.AuthChunk.Builder> 
+           getMainBuilderList() {
+        return getMainFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
           Protobuf.AuthChunk, Protobuf.AuthChunk.Builder, Protobuf.AuthChunkOrBuilder> 
           getMainFieldBuilder() {
         if (mainBuilder_ == null) {
-          mainBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          mainBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               Protobuf.AuthChunk, Protobuf.AuthChunk.Builder, Protobuf.AuthChunkOrBuilder>(
                   main_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
                   isClean());
           main_ = null;
@@ -19751,7 +19914,7 @@ public final class Protobuf {
       " \002(\t\022\022\n\nprettyName\030\006 \002(\t\022\013\n\003idk\030\007 \001(\t\"\034\n" +
       "\004Keys\022\024\n\006keySet\030\001 \003(\0132\004.Key\"\"\n\003Key\022\r\n\005in" +
       "dex\030\001 \002(\005\022\014\n\004data\030\002 \002(\t\"\030\n\010GetFiles\022\014\n\004h" +
-      "ash\030\001 \002(\014\"$\n\010FileAuth\022\030\n\004main\030\001 \002(\0132\n.Au" +
+      "ash\030\001 \002(\014\"$\n\010FileAuth\022\030\n\004main\030\001 \003(\0132\n.Au" +
       "thChunk\"0\n\tAuthChunk\022\020\n\010checksum\030\001 \002(\014\022\021" +
       "\n\tauthToken\030\002 \002(\t\"S\n\014AuthorizeGet\0220\n\004dat" +
       "a\030\001 \002(\0132\".FileChecksumStorageHostChunkLi",

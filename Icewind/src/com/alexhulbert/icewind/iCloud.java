@@ -1,6 +1,8 @@
 package com.alexhulbert.icewind;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
 import xmlwise.Plist;
 import xmlwise.XmlParseException;
@@ -188,10 +191,15 @@ public class iCloud {
         return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset + (limit == null ? "" : "&limit=" + limit), true);
     }
     
-    public static String authorizeGet(String pNum, String dsPrsID, String mmeAuthToken) {
+    public static byte[] authorizeGet(byte[] data, String auth, String pNum, String dsPrsID, String mmeAuthToken) {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.post("", Utils.getIcpHeaders(authHeaders), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);
+        authHeaders.put("X-Apple-Request-UUID", "4EFFF273-5611-479B-A945-04DA0A0F2C3A");
+        authHeaders.put("X-Apple-mmcs-Proto-Version", "3.3");
+        authHeaders.put("X-Apple-mmcs-dsid", dsPrsID);
+        authHeaders.put("X-Apple-mmcs-DataClass", "com.apple.Dataclass.Backup");
+        authHeaders.put("X-mme-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
+        authHeaders.put("X-Apple-mmcs-auth", auth);
+        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);    
     }
     
     public static byte[] getFiles(byte[] data, String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID) {
@@ -263,10 +271,12 @@ public class iCloud {
                 try {
                     resps.add(Protobuf.AuthChunk.parseFrom(authCis.readRawBytes(len)));
                 } catch (InvalidProtocolBufferException ipbe) {
+                    ipbe.printStackTrace();
                     //errorhandle: What's the worst that could happen? They're just Auth tokens...
                 }
             }
         } catch (IOException ipbe) {
+            ipbe.printStackTrace();
             //errorhandle: Meh
         }
         return resps.toArray(new Protobuf.AuthChunk[resps.size()]);
@@ -289,4 +299,62 @@ public class iCloud {
         }
         return oust.toByteArray();
     }
+    
+    public static Map<ByteString, ByteString> buildHashDictionary(Protobuf.File[] sources) {
+        Map<ByteString, ByteString> dict = new HashMap<ByteString, ByteString>(); //A HashMap of mapped Hashes
+        for (Protobuf.File sauce : sources) { 
+            dict.put(sauce.getFileName(), sauce.getAltFileName());
+        }
+        return dict;
+    }
+    
+    public static Pair<String, Protobuf.FileAuth> buildAuthorizeGet(Protobuf.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) {
+        Protobuf.FileAuth.Builder builder = Protobuf.FileAuth.newBuilder();
+        for (Protobuf.AuthChunk file : auch) {
+            Protobuf.AuthChunk.Builder subBuilder = Protobuf.AuthChunk.newBuilder();
+            subBuilder.setAuthToken(file.getAuthToken());
+            subBuilder.setChecksum(hashDict.get(file.getChecksum()));
+            builder.addMain(subBuilder.build());
+        }
+        return new Pair<String, Protobuf.FileAuth>(
+                Utils.bytesToHex(hashDict.get(auch[0].getChecksum()).toByteArray()).concat(" ") +
+                auch[0].getAuthToken(),
+                builder.build()
+        );
+    }
+    
+    /*
+    public static List<Pair<String, byte[]>> buildAuthorizeGet(Protobuf.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) {
+        List<Pair<String, byte[]>> output = new ArrayList<Pair<String, byte[]>>();
+        int i = 0;
+        
+        while (i < auch.length) {
+            int startIndex = i;
+            ByteArrayOutputStream group = new ByteArrayOutputStream();
+            
+            while (i < Math.min(startIndex + 11, auch.length)) { //TODO: Figure out what splits authGet requests
+                Protobuf.FileAuth.Builder builder = Protobuf.FileAuth.newBuilder();
+                Protobuf.AuthChunk.Builder main = Protobuf.AuthChunk.newBuilder(auch[i]);
+                main.setChecksum(hashDict.get(auch[i].getChecksum()));
+                builder.setMain(main.build());
+                Protobuf.FileAuth reqPart = builder.build();
+                try {
+                    reqPart.writeDelimitedTo(group);
+                } catch (IOException ex) {
+                    //errorhandle: I'm running out of witty things to say...
+                }
+                i++;
+            }
+            
+            Pair<String, byte[]> groupOutput = new Pair(
+                    Utils.bytesToHex(hashDict.get(auch[startIndex].getChecksum()).toByteArray()).concat(" ") +
+                    auch[startIndex].getAuthToken(),
+                    group.toByteArray()
+            );
+            
+            output.add(groupOutput);
+        }
+        return output;
+    }
+    */
 }

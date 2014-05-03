@@ -9,9 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
- import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -35,7 +34,7 @@ public class Utils {
      * Call me an idiot if you want.
      */
     public static void oblivian() {
-        //I use this as sport for breakpoints.
+        //I use this as a point for breakpoints.
         //This is also a good control, since it should never raise an Exception (I hope)
     }
     

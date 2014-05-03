@@ -54,7 +54,7 @@ message GetFiles { //POST this to getFiles, get an AuthChunk in response
 }
 
 message FileAuth { //POST this to "authorizeGet"
-	required AuthChunk main = 1;
+	repeated AuthChunk main = 1;
 }
 
 message AuthChunk { //Also response of getFiles
