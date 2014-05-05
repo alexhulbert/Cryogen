@@ -185,17 +185,19 @@ public class iCloud {
      * @param limit Max length
      * @return A list of files to download
      */
-    public static byte[] listFiles(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID, int offset, String limit) {
+    public static byte[] listFiles(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID, int offset, Long limit) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset + (limit == null ? "" : "&limit=" + limit), true);
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset + (limit == null ? "" : "&limit=" + String.valueOf(limit)), true);
     }
     
     public static byte[] authorizeGet(byte[] data, String auth, String pNum, String dsPrsID, String mmeAuthToken) {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("X-Apple-Request-UUID", "4EFFF273-5611-479B-A945-04DA0A0F2C3A");
+        authHeaders.put("Accept", "*/*");
+        authHeaders.put("User-Agent", "MobileBackup/5.1.1 (9B206; iPhone4,1)");
+        authHeaders.put("X-Apple-Request-UUID", "900DFACE-BABE-C001-A550-B00B1E52C0DE"); //Now that's what I call magic hex.
         authHeaders.put("X-Apple-mmcs-Proto-Version", "3.3");
-        authHeaders.put("X-Apple-mmcs-dsid", dsPrsID);
+        authHeaders.put("X-Apple-mme-dsid", dsPrsID);
         authHeaders.put("X-Apple-mmcs-DataClass", "com.apple.Dataclass.Backup");
         authHeaders.put("X-mme-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
         authHeaders.put("X-Apple-mmcs-auth", auth);

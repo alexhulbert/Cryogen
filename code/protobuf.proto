@@ -64,7 +64,7 @@ message AuthChunk { //Also response of getFiles
 
 message AuthorizeGet { //Response from "authorizeGet"
 	required FileChecksumStorageHostChunkLists data = 1;
-	required int32 verbosity = 2; //Usually 2
+	required int32 verbosity = 4; //Usually 2
 }
 
 message FileChecksumStorageHostChunkLists {

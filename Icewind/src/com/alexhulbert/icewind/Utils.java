@@ -55,7 +55,7 @@ public class Utils {
         icph.put("User-Agent", "MobileBackup/5.1.1 (9B206; iPhone4,1)");
         icph.put("Accept", "application/vnd.com.apple.mbs+protobuf");
         icph.put("Accept-Language", "en-US");
-        icph.put("X-Apple-Request-UUID", "4EFFF273-5611-479B-A945-04DA0A0F2C3A");
+        icph.put("X-Apple-Request-UUID", "900DFACE-BABE-C001-A550-B00B1E52C0DE");
         icph.put("X-Apple-MBS-Protocol-Version", "1.7"); //Anything higher than 1.7 will not give you the X-MobileMe-AuthToken
         icph.put("X-MMe-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
         return icph;
@@ -66,7 +66,7 @@ public class Utils {
         headers.put("User-Agent", "MobileBackup/5.1.1 (9B206; iPhone4,1)");
         headers.put("Accept", "application/vnd.com.apple.mbs+protobuf");
         headers.put("Accept-Language", "en-US");
-        headers.put("X-Apple-Request-UUID", "4EFFF273-5611-479B-A945-04DA0A0F2C3A");
+        headers.put("X-Apple-Request-UUID", "900DFACE-BABE-C001-A550-B00B1E52C0DE");
         headers.put("X-Apple-MBS-Protocol-Version", "1.7"); //Anything higher than 1.7 will not give you the X-MobileMe-AuthToken
         headers.put("X-MMe-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
         return headers;

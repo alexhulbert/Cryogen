@@ -8424,9 +8424,9 @@ public final class Protobuf {
      */
     Protobuf.FileChecksumStorageHostChunkListsOrBuilder getDataOrBuilder();
 
-    // required int32 verbosity = 2;
+    // required int32 verbosity = 4;
     /**
-     * <code>required int32 verbosity = 2;</code>
+     * <code>required int32 verbosity = 4;</code>
      *
      * <pre>
      *Usually 2
@@ -8434,7 +8434,7 @@ public final class Protobuf {
      */
     boolean hasVerbosity();
     /**
-     * <code>required int32 verbosity = 2;</code>
+     * <code>required int32 verbosity = 4;</code>
      *
      * <pre>
      *Usually 2
@@ -8510,7 +8510,7 @@ public final class Protobuf {
               bitField0_ |= 0x00000001;
               break;
             }
-            case 16: {
+            case 32: {
               bitField0_ |= 0x00000002;
               verbosity_ = input.readInt32();
               break;
@@ -8577,11 +8577,11 @@ public final class Protobuf {
       return data_;
     }
 
-    // required int32 verbosity = 2;
-    public static final int VERBOSITY_FIELD_NUMBER = 2;
+    // required int32 verbosity = 4;
+    public static final int VERBOSITY_FIELD_NUMBER = 4;
     private int verbosity_;
     /**
-     * <code>required int32 verbosity = 2;</code>
+     * <code>required int32 verbosity = 4;</code>
      *
      * <pre>
      *Usually 2
@@ -8591,7 +8591,7 @@ public final class Protobuf {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required int32 verbosity = 2;</code>
+     * <code>required int32 verbosity = 4;</code>
      *
      * <pre>
      *Usually 2
@@ -8633,7 +8633,7 @@ public final class Protobuf {
         output.writeMessage(1, data_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, verbosity_);
+        output.writeInt32(4, verbosity_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -8650,7 +8650,7 @@ public final class Protobuf {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, verbosity_);
+          .computeInt32Size(4, verbosity_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8999,10 +8999,10 @@ public final class Protobuf {
         return dataBuilder_;
       }
 
-      // required int32 verbosity = 2;
+      // required int32 verbosity = 4;
       private int verbosity_ ;
       /**
-       * <code>required int32 verbosity = 2;</code>
+       * <code>required int32 verbosity = 4;</code>
        *
        * <pre>
        *Usually 2
@@ -9012,7 +9012,7 @@ public final class Protobuf {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required int32 verbosity = 2;</code>
+       * <code>required int32 verbosity = 4;</code>
        *
        * <pre>
        *Usually 2
@@ -9022,7 +9022,7 @@ public final class Protobuf {
         return verbosity_;
       }
       /**
-       * <code>required int32 verbosity = 2;</code>
+       * <code>required int32 verbosity = 4;</code>
        *
        * <pre>
        *Usually 2
@@ -9035,7 +9035,7 @@ public final class Protobuf {
         return this;
       }
       /**
-       * <code>required int32 verbosity = 2;</code>
+       * <code>required int32 verbosity = 4;</code>
        *
        * <pre>
        *Usually 2
@@ -19918,7 +19918,7 @@ public final class Protobuf {
       "thChunk\"0\n\tAuthChunk\022\020\n\010checksum\030\001 \002(\014\022\021" +
       "\n\tauthToken\030\002 \002(\t\"S\n\014AuthorizeGet\0220\n\004dat" +
       "a\030\001 \002(\0132\".FileChecksumStorageHostChunkLi",
-      "sts\022\021\n\tverbosity\030\002 \002(\005\"\237\001\n!FileChecksumS" +
+      "sts\022\021\n\tverbosity\030\004 \002(\005\"\237\001\n!FileChecksumS" +
       "torageHostChunkLists\0226\n\027storage_host_chu" +
       "nk_list\030\001 \003(\0132\025.StorageHostChunkList\022B\n\034" +
       "file_checksum_chunk_ref_list\030\002 \003(\0132\034.Fil" +

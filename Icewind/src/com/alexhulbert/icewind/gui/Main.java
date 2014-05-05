@@ -1,8 +1,10 @@
 package com.alexhulbert.icewind.gui;
+import com.alexhulbert.icewind.iCloudTest;
 import javafx.application.Application;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.python.apache.xerces.impl.dv.util.Base64;
 
 public class Main extends Application {
 
@@ -17,6 +19,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Pymobiledevice.init();
+        //iCloudTest.dryRun("Your AppleID", "Encode your password in Base64");
         Font.loadFont(Main.class.getResource("binResc/Roboto-Thin.ttf").toExternalForm(), 24);
         StaticStage.mainStage = primaryStage;
         primaryStage.initStyle(StageStyle.TRANSPARENT);
