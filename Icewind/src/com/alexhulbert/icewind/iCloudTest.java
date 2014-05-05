@@ -30,9 +30,9 @@ public class iCloudTest {
         
         //Retrieving list of devices
         byte[] udids = iCloud.listDevices(pnum, dsid, mmeAuth);
-        String udid1 = Utils.bytesToHex(Protobuf.DeviceUdids.parseFrom(udids).getUdids(0).toByteArray());
+        String udid1 = Utils.bytesToHex(Protocol.DeviceUdids.parseFrom(udids).getUdids(0).toByteArray());
         byte[] snapshotInfo = iCloud.getInfo(pnum, dsid, mmeAuth, udid1);
-        int sid = Protobuf.Device.parseFrom(snapshotInfo).getBackup(0).getSnapshotID();
+        int sid = Protocol.Device.parseFrom(snapshotInfo).getBackup(0).getSnapshotID();
         byte[] fileList = iCloud.listFiles(
                 pnum,
                 dsid,
@@ -42,7 +42,7 @@ public class iCloudTest {
                 0,
                 (long) (Math.pow(2, 16) - 1)
         );
-        Protobuf.File[] files = iCloud.parseFiles(fileList);
+        Protocol.File[] files = iCloud.parseFiles(fileList);
         byte[] getFilesRequest = iCloud.buildGetFiles(files);
         byte[] gfResponse = iCloud.getFiles(
                 getFilesRequest,
@@ -52,11 +52,11 @@ public class iCloudTest {
                 udid1,
                 sid
         );
-        Protobuf.AuthChunk[] ac = iCloud.parseGetFiles(gfResponse);
+        Protocol.AuthChunk[] ac = iCloud.parseGetFiles(gfResponse);
         Map<ByteString, ByteString> hd = iCloud.buildHashDictionary(files);
-        Pair<String, Protobuf.FileAuth> fa = iCloud.buildAuthorizeGet(ac, hd);
+        Pair<String, Protocol.FileAuth> fa = iCloud.buildAuthorizeGet(ac, hd);
         byte[] b = iCloud.authorizeGet(fa.getValue().toByteArray(), fa.getKey(), pnum, dsid, mmeAuth);
-        Protobuf.AuthorizeGet authGet = Protobuf.AuthorizeGet.parseFrom(b);
+        Protocol.AuthorizeGet authGet = Protocol.AuthorizeGet.parseFrom(b);
         Utils.oblivian();
     }
 }

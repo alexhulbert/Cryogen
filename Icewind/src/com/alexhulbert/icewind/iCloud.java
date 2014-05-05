@@ -210,11 +210,11 @@ public class iCloud {
         return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/getFiles", true);
     }
     
-    public static Protobuf.File[] parseFiles(byte[] fileList) {
+    public static Protocol.File[] parseFiles(byte[] fileList) {
         return parseFiles(fileList, null);
     }
     
-    public static Protobuf.File[] parseFiles(byte[] fileList, LoadingBar prog) {
+    public static Protocol.File[] parseFiles(byte[] fileList, LoadingBar prog) {
         CodedInputStream fileCounter = CodedInputStream.newInstance(fileList);
         CodedInputStream fileParser = CodedInputStream.newInstance(fileList);
         int numFiles = 0;
@@ -238,12 +238,12 @@ public class iCloud {
             prog.percentage();
         }
         
-        Protobuf.File[] files = new Protobuf.File[numFiles];
+        Protocol.File[] files = new Protocol.File[numFiles];
         try {
             for (int i = 0; !fileParser.isAtEnd(); i++) {
                 int len = fileParser.readRawVarint32();
                 try {
-                    files[i] = Protobuf.File.parseFrom(fileParser.readRawBytes(len));
+                    files[i] = Protocol.File.parseFrom(fileParser.readRawBytes(len));
                 } catch (InvalidProtocolBufferException ipbe) {
                     files[i] = null;
                     //errorhandle: REPORT THIS TO THE DEVELOPER!!! (me)
@@ -264,14 +264,14 @@ public class iCloud {
         return files;
     }
     
-    public static Protobuf.AuthChunk[] parseGetFiles(byte[] getFilesResponse) {
+    public static Protocol.AuthChunk[] parseGetFiles(byte[] getFilesResponse) {
         CodedInputStream authCis = CodedInputStream.newInstance(getFilesResponse);
-        List<Protobuf.AuthChunk> resps = new ArrayList<Protobuf.AuthChunk>();
+        List<Protocol.AuthChunk> resps = new ArrayList<Protocol.AuthChunk>();
         try {
             for (int i = 0; !authCis.isAtEnd(); i++) {
                 int len = authCis.readRawVarint32();
                 try {
-                    resps.add(Protobuf.AuthChunk.parseFrom(authCis.readRawBytes(len)));
+                    resps.add(Protocol.AuthChunk.parseFrom(authCis.readRawBytes(len)));
                 } catch (InvalidProtocolBufferException ipbe) {
                     ipbe.printStackTrace();
                     //errorhandle: What's the worst that could happen? They're just Auth tokens...
@@ -281,17 +281,17 @@ public class iCloud {
             ipbe.printStackTrace();
             //errorhandle: Meh
         }
-        return resps.toArray(new Protobuf.AuthChunk[resps.size()]);
+        return resps.toArray(new Protocol.AuthChunk[resps.size()]);
     }
     
-    public static byte[] buildGetFiles(Protobuf.File[] files) {
+    public static byte[] buildGetFiles(Protocol.File[] files) {
         ByteArrayOutputStream oust = new ByteArrayOutputStream();
-        for (Protobuf.File f : files) {
+        for (Protocol.File f : files) {
             if (f.getFileSize() == 0) {
                 continue;
             }
             
-            Protobuf.GetFiles.Builder instance = Protobuf.GetFiles.newBuilder();
+            Protocol.GetFiles.Builder instance = Protocol.GetFiles.newBuilder();
             instance.setHash(f.getFileName());
             try {
                 instance.build().writeDelimitedTo(oust);
@@ -302,23 +302,23 @@ public class iCloud {
         return oust.toByteArray();
     }
     
-    public static Map<ByteString, ByteString> buildHashDictionary(Protobuf.File[] sources) {
+    public static Map<ByteString, ByteString> buildHashDictionary(Protocol.File[] sources) {
         Map<ByteString, ByteString> dict = new HashMap<ByteString, ByteString>(); //A HashMap of mapped Hashes
-        for (Protobuf.File sauce : sources) { 
+        for (Protocol.File sauce : sources) { 
             dict.put(sauce.getFileName(), sauce.getAltFileName());
         }
         return dict;
     }
     
-    public static Pair<String, Protobuf.FileAuth> buildAuthorizeGet(Protobuf.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) {
-        Protobuf.FileAuth.Builder builder = Protobuf.FileAuth.newBuilder();
-        for (Protobuf.AuthChunk file : auch) {
-            Protobuf.AuthChunk.Builder subBuilder = Protobuf.AuthChunk.newBuilder();
+    public static Pair<String, Protocol.FileAuth> buildAuthorizeGet(Protocol.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) {
+        Protocol.FileAuth.Builder builder = Protocol.FileAuth.newBuilder();
+        for (Protocol.AuthChunk file : auch) {
+            Protocol.AuthChunk.Builder subBuilder = Protocol.AuthChunk.newBuilder();
             subBuilder.setAuthToken(file.getAuthToken());
             subBuilder.setChecksum(hashDict.get(file.getChecksum()));
             builder.addMain(subBuilder.build());
         }
-        return new Pair<String, Protobuf.FileAuth>(
+        return new Pair<String, Protocol.FileAuth>(
                 Utils.bytesToHex(hashDict.get(auch[0].getChecksum()).toByteArray()).concat(" ") +
                 auch[0].getAuthToken(),
                 builder.build()
