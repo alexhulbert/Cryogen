@@ -145,7 +145,7 @@ message File {
 	required int32 fileSize = 5;
 	optional FileInfo info = 6;
 	required int64 date = 7;
-	required bool bool = 9;
+	optional bool bool = 9;
 }
 
 message Header { //This is a header to be used when downloading chunks
