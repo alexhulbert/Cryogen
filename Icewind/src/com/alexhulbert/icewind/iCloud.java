@@ -287,7 +287,7 @@ public class iCloud {
     public static byte[] buildGetFiles(Protocol.File[] files) {
         ByteArrayOutputStream oust = new ByteArrayOutputStream();
         for (Protocol.File f : files) {
-            if (f.getFileSize() == 0) {
+            if (f == null || f.getFileSize() == 0) {
                 continue;
             }
             
