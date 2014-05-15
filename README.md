@@ -1,7 +1,7 @@
 Icew1nd
 =======
 
-<img src="img/icewind.jpg">
+<img src="http://alexhulbert.com/img/Icewind_new.png">
 <h3> Made by Taconut </h3>
 Announcements:
 --------------
