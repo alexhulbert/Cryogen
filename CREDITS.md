@@ -11,8 +11,8 @@ Taconut (yay!)
 
 Gui
 ---
-Graphic Design - Adisai (...?)  
-  
+Graphic Design - Taconut :D  
+Chrizzio1029 - Logo
 iH8Sn0w - Inspiration  
 
 iCloud
