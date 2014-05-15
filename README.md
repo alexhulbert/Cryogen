@@ -1,8 +1,5 @@
-Icew1nd
-=======
-
 <img src="http://alexhulbert.com/img/Icewind_new.png">
-<h3> Made by Taconut </h3>
+<h3> ~Taconut </h3>
 Announcements:
 --------------
 
@@ -26,6 +23,10 @@ Table of Contents:
   + <a href="#backup-custom-folder">Custom Paths</a>
   + <a href="#restore-packages">Cydia Restore</a>
 + <a href="CREDITS.md">Credits</a>
+
+Pics or it didn't happen
+------------------------
+<img src="http://alexhulbert.com/img/icewind.png">
 
 What is Icew1nd?
 ----------------
