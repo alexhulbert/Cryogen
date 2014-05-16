@@ -57,6 +57,6 @@ public class iCloudTest {
         Pair<String, Protocol.FileAuth> fa = iCloud.buildAuthorizeGet(ac, hd);
         byte[] b = iCloud.authorizeGet(fa.getValue().toByteArray(), fa.getKey(), pnum, dsid, mmeAuth);
         Protocol.AuthorizeGet authGet = Protocol.AuthorizeGet.parseFrom(b);
-        Utils.oblivian();
+        Utils.oblivion();
     }
 }

@@ -73,6 +73,21 @@
     -fx-font-size: 20;
 }
 
+.btn-red {
+    -fx-padding: 5 22 5 22;   
+    -fx-background-radius: 12.5;
+    -fx-background-color: #FB153D;
+    -fx-text-fill: white;
+}
+
+.btn-red:hover {
+    -fx-background-color: #FB2D54;
+}
+
+.btn-red:pressed {
+  -fx-text-fill: #CCC8C7;
+}
+
 .goldenrod {
     -fx-padding: 5 22 5 22;   
     -fx-border-style: null; 
@@ -87,6 +102,10 @@
     -fx-font-size: 36pt;
     -fx-font-weight: BOLD;
     -fx-text-fill: #FFE05A;
+}
+
+.smaller {
+    -fx-font-size: 24px;
 }
 
 .goldenrod:hover {
@@ -110,4 +129,40 @@
 
 .arrow-right {
     -fx-shape: "M512,256L0,0L128,256l-128,256L512,256z";
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Text                                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.text-input:focused{
+    -fx-text-fill: #000000;
+}
+
+.text-line {
+    -fx-background-color: transparent, transparent;
+    -fx-border-color: rgb(156, 164, 168);
+    -fx-border-width: 0 0 1.5 0;
+}
+
+.red-line {
+    -fx-background-color: transparent, transparent;
+    -fx-border-color: rgb(256, 164, 168);
+    -fx-border-width: 0 0 1.5 0;
+    -fx-text-fill: rgb(256, 82, 84);
+}
+
+#Incorrect {
+    -fx-background-color: transparent, transparent;
+    -fx-border-color: rgb(256, 164, 168);
+    -fx-border-width: 2;
+    -fx-border-radius: 12.5;
+    -fx-fill-color: #45000025;
+    -fx-text-fill: rgb(256, 82, 84);
+}
+
+.sred-line:focused {
+    -fx-text-fill:  rgb(192, 61, 63);
 }

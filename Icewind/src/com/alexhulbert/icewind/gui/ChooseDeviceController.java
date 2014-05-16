@@ -42,8 +42,9 @@ public class ChooseDeviceController implements Initializable {
         BackBtn.prefHeightProperty().bind(BackCase.heightProperty().multiply(9).divide(13));
         refresh();
     }
-    public void debug() {
-        int i = 0;
+    
+    public void cloudPick() {
+        StaticStage.loadScreen("Authenticate");
     }
     
     public void refresh() {

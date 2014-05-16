@@ -24,6 +24,9 @@ public class StaticStage {
     public static List<Lockdown> devices = new ArrayList<Lockdown>();
     public static String[] bigImages = new String[3];
     
+    public static int dsid;
+    public static String mmsAuth;
+    
     public static Lockdown dLockdown;
     public static Image dImg = null;
     public static String dName = "";

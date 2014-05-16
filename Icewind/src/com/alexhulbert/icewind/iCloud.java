@@ -206,7 +206,10 @@ public class iCloud {
     
     public static byte[] getFiles(byte[] data, String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID) {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
+        authHeaders.remove("X-Apple-mmcs-Proto-Version");
+        authHeaders.put("X-Apple-MBS-Proto-Version", "2.1");
+        authHeaders.put("X-Apple-MBS-Lock:", "Hold " +  backupUDID);
         return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/getFiles", true);
     }
     

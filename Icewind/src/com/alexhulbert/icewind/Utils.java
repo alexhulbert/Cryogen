@@ -33,7 +33,7 @@ public class Utils {
      * Yup. This does absolutely nothing at all.
      * Call me an idiot if you want.
      */
-    public static void oblivian() {
+    public static void oblivion() {
         //I use this as a point for breakpoints.
         //This is also a good control, since it should never raise an Exception (I hope)
     }
@@ -156,7 +156,7 @@ public class Utils {
         HttpClient dhCli = HttpClientBuilder.create().build();
         try {
             HttpResponse hResp = dhCli.execute(post_raw(body, headers, host, path, ssl));
-            return IOUtils.toByteArray(hResp.getEntity().getContent());
+             return IOUtils.toByteArray(hResp.getEntity().getContent());
         } catch(IOException | IllegalStateException e) {
             e.printStackTrace();
         }

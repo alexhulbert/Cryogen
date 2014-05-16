@@ -35,7 +35,7 @@
         <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Button mnemonicParsing="false" onMouseClicked="#debug" prefHeight="Infinity" prefWidth="Infinity" text="iCloud" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+        <Button mnemonicParsing="false" onMouseClicked="#cloudPick" prefHeight="Infinity" prefWidth="Infinity" text="iCloud" GridPane.columnIndex="4" GridPane.rowIndex="5" />
         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="Infinity" prefWidth="Infinity" text="Choose a Device" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1">
             <font>
                 <Font name="Roboto Thin" size="64.0" />
