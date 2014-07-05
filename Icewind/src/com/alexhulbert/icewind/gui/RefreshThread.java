@@ -8,6 +8,7 @@ import com.alexhulbert.jmobiledevice.diagnostics.Diagnostics;
 import com.alexhulbert.jmobiledevice.diagnostics.Info;
 import com.alexhulbert.jmobiledevice.diagnostics.Keys;
 import java.io.IOException;
+import java.util.Locale;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -35,7 +36,7 @@ public class RefreshThread implements Runnable {
         String base = "http://theiphonewiki.com";
         Document wiki;
         try {
-            wiki = Jsoup.connect(base + "/wiki/" + build.toLowerCase()).get();
+            wiki = Jsoup.connect(base + "/wiki/" + build.toLowerCase(Locale.ENGLISH)).get();
         } catch (IOException e) {
             return null; //Device picture not available
         }
