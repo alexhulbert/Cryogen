@@ -2,8 +2,8 @@ package com.alexhulbert.icewind;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
 import xmlwise.Plist;
@@ -265,21 +263,14 @@ public class iCloud {
     }
     
     public static Protocol.AuthChunk[] parseGetFiles(byte[] getFilesResponse) {
-        CodedInputStream authCis = CodedInputStream.newInstance(getFilesResponse);
         List<Protocol.AuthChunk> resps = new ArrayList<Protocol.AuthChunk>();
-        try {
-            for (int i = 0; !authCis.isAtEnd(); i++) {
-                int len = authCis.readRawVarint32();
-                try {
-                    resps.add(Protocol.AuthChunk.parseFrom(authCis.readRawBytes(len)));
-                } catch (InvalidProtocolBufferException ipbe) {
-                    ipbe.printStackTrace();
-                    //errorhandle: What's the worst that could happen? They're just Auth tokens...
-                }
+        ByteArrayInputStream bais = new ByteArrayInputStream(getFilesResponse);
+        while (bais.available() > 0) {
+            try {
+                resps.add(Protocol.AuthChunk.parseDelimitedFrom(bais));
+            } catch(IOException e) {
+                //errorhandle: I'm putting these here so I know where to add error handling later
             }
-        } catch (IOException ipbe) {
-            ipbe.printStackTrace();
-            //errorhandle: Meh
         }
         return resps.toArray(new Protocol.AuthChunk[resps.size()]);
     }
@@ -296,7 +287,7 @@ public class iCloud {
             try {
                 instance.build().writeDelimitedTo(oust);
             } catch (IOException e) {
-                //errorhandle: I guess user's not getting they're flappy bird save.
+                //errorhandle: I guess user's not getting their flappy bird save.
             }
         }
         return oust.toByteArray();
