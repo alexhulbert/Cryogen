@@ -3,7 +3,7 @@
 Announcements:
 --------------
 
-+ None right now :)
++ I'm currently focusing on decryption ATM thanks to requests/donation. In the meantime, there won't be nearly as much work on the GUI or JMobileDevice. Furthermore, most of the changes will stay local/uncommited until the code can (semi-)accurately decrypt a file from iCloud, at which point I'll start pushing more frequent code updates. Thanks!
 
 Table of Contents:
 ------------------
@@ -48,15 +48,14 @@ __Current Tasks:__
 __Current Status:__
 
 <pre>
-iCloud        {++++++----}  60%
+iCloud        {++++++++--}  80%
 Data Backup   {+++++-----}  50%
 Data Restore  {+++++-----}  50%
-App Backup    {++++++----}  60%
-App Restore   {++++++----}  60%
-Plist Editor  {----------}   0%
-Cydia Restore {+---------}  10%
-Cydia Backup  {+---------}  10%
-OVERALL       [====>     ]  40%
+App Backup    {++++++++--}  80%
+App Restore   {++++++++--}  80%
+Cydia Restore {+++-------}  30%
+Cydia Backup  {+++-------}  30%
+OVERALL       [=======>  ]  70%
 </pre>
 
 
