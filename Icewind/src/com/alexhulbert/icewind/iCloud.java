@@ -29,12 +29,12 @@ public class iCloud {
     private LoadingBar prog = null;
     private boolean status = true;
     
-    public iCloud(String appleID, String password) throws XmlParseException {
+    public iCloud(String appleID, String password) {
         this.authenticate(appleID, password);
         this.getAccountSettings();
     }
     
-    public iCloud(String appleID, String password, LoadingBar progressBar) throws XmlParseException {
+    public iCloud(String appleID, String password, LoadingBar progressBar) {
         this.authenticate(appleID, password);
         this.getAccountSettings();
         this.prog = progressBar;
@@ -113,11 +113,18 @@ public class iCloud {
      * @param mmeAuthToken The Mobile Me Authentication Token
      * @return Information about your account
      */
-    private void getAccountSettings() throws XmlParseException {
+    private void getAccountSettings() {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
         String accountInfo =  Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/get_account_settings", true);
-        Map<String, Object> properties = Plist.fromXml(accountInfo);
+        Map<String, Object> properties;
+        try {
+            properties = Plist.fromXml(accountInfo);
+        } catch (XmlParseException xpex) {
+            status = false;
+            //errorhandle: I REALLY don't want to have to go through all of these
+            return;
+        }
         Map<String, Object> mobileMe = (Map<String, Object>) properties.get("com.apple.mobileme");
         
         // Get MobileBackup URL
