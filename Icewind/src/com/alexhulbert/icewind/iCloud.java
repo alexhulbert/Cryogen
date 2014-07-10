@@ -86,11 +86,19 @@ public class iCloud {
      * @param password Password for your AppleID
      * @return A plist containing your mmeAuthToken and dsPrsID
      */
-    private void authenticate(String appleID, String password) throws XmlParseException {
+    private void authenticate(String appleID, String password) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(appleID, password));
         String plist = Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/authenticate/" + appleID, true);
-        Map<String, Object> properties = Plist.fromXml(plist);
+        
+        Map<String, Object> properties;
+        try {
+            properties = Plist.fromXml(plist);
+        } catch(XmlParseException xpex) {
+            //errorhandle: Isn't just setting the status variable good enough?
+            status = false;
+            return; //Too bad...
+        }
         
         // Parse the dsPrsID out of the auth plist
         this.dsPrsID = (Integer)((Map<String, Object>) properties.get("appleAccountInfo")).get("dsPrsID");
@@ -306,6 +314,14 @@ public class iCloud {
                 auch[0].getAuthToken(),
                 builder.build()
         );
+    }
+    
+    /**
+     * Used to check if there have been any errors, etc.
+     * @return Whether everything has succeeded so far
+     */
+    public boolean getStatus() {
+        return this.status;
     }
     
     //Maybe implement generics with this? It could be incorperated into EasyProto.
