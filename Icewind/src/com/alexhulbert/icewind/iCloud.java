@@ -21,25 +21,33 @@ import xmlwise.XmlParseException;
  * @author Taconut
  */
 public class iCloud {
-    public static String fsep = File.separator; //Writing "File.separator" takes too long
-    private static Integer dsPrsID;
-    private static String mmeAuthToken;
-    private static String mobileBackupUrl;
-    private static String contentUrl;
+    private static String fsep = File.separator; //Writing "File.separator" takes too long
+    private Integer dsPrsID;
+    private String mmeAuthToken;
+    private String mobileBackupUrl;
+    private String contentUrl;
+    private LoadingBar prog = null;
+    private boolean status = true;
     
     public iCloud(String appleID, String password) throws XmlParseException {
         this.authenticate(appleID, password);
         this.getAccountSettings();
     }
     
+    public iCloud(String appleID, String password, LoadingBar progressBar) throws XmlParseException {
+        this.authenticate(appleID, password);
+        this.getAccountSettings();
+        this.prog = progressBar;
+    }
+    
     /**
-     * Restores a decrypted iCloud backup onto the device
+     * Restores a decrypted iCloud backup onto the device (Just a Proof of Concept for now)
      * @param sshPath     path to where the device is mounted
      * @param backupPath  path to where the iCloud backup is stored
      * @param listColor   type of list used: false=blacklist, true=whitelist
      * @param aList       app name blacklist/whitelist (depending on listColor)
      */
-    public static void restore(String sshPath, String backupPath, boolean listColor, List<String> aList) {
+    private static void restore(String sshPath, String backupPath, boolean listColor, List<String> aList) {
         for (File F_UID : new File(sshPath + "/var/mobile/Applications".replace("/", fsep)).listFiles()) {
             for (File plist : new File(F_UID.getPath() + "/Library/Prefrences".replace("/", fsep)).listFiles()) {
                 String bid = plist.getName().substring(0, plist.getName().length() - 4);
@@ -70,13 +78,12 @@ public class iCloud {
             }
         }
     }
-        
    
     
     /**
      * Authenticates you with apple
-     * @param appleID
-     * @param password
+     * @param appleID Username/Email
+     * @param password Password for your AppleID
      * @return A plist containing your mmeAuthToken and dsPrsID
      */
     private void authenticate(String appleID, String password) throws XmlParseException {
@@ -197,11 +204,7 @@ public class iCloud {
         return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/" + snapshotID + "/getFiles", true);
     }
     
-    public static Protocol.File[] parseFiles(byte[] fileList) {
-        return parseFiles(fileList, null);
-    }
-    
-    public static Protocol.File[] parseFiles(byte[] fileList, LoadingBar prog) {
+    public Protocol.File[] parseFiles(byte[] fileList) {
         CodedInputStream fileCounter = CodedInputStream.newInstance(fileList);
         CodedInputStream fileParser = CodedInputStream.newInstance(fileList);
         int numFiles = 0;
@@ -251,7 +254,7 @@ public class iCloud {
         return files;
     }
     
-    public static Protocol.AuthChunk[] parseGetFiles(byte[] getFilesResponse) {
+    public Protocol.AuthChunk[] parseGetFiles(byte[] getFilesResponse) {
         List<Protocol.AuthChunk> resps = new ArrayList<Protocol.AuthChunk>();
         ByteArrayInputStream bais = new ByteArrayInputStream(getFilesResponse);
         while (bais.available() > 0) {
@@ -264,7 +267,7 @@ public class iCloud {
         return resps.toArray(new Protocol.AuthChunk[resps.size()]);
     }
     
-    public static byte[] buildGetFiles(Protocol.File[] files) {
+    public byte[] buildGetFiles(Protocol.File[] files) {
         ByteArrayOutputStream oust = new ByteArrayOutputStream();
         for (Protocol.File f : files) {
             if (f == null || f.getFileSize() == 0) {
@@ -305,41 +308,7 @@ public class iCloud {
         );
     }
     
-    /*
-    public static List<Pair<String, byte[]>> buildAuthorizeGet(Protobuf.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) {
-        List<Pair<String, byte[]>> output = new ArrayList<Pair<String, byte[]>>();
-        int i = 0;
-        
-        while (i < auch.length) {
-            int startIndex = i;
-            ByteArrayOutputStream group = new ByteArrayOutputStream();
-            
-            while (i < Math.min(startIndex + 11, auch.length)) { //TODO: Figure out what splits authGet requests
-                Protobuf.FileAuth.Builder builder = Protobuf.FileAuth.newBuilder();
-                Protobuf.AuthChunk.Builder main = Protobuf.AuthChunk.newBuilder(auch[i]);
-                main.setChecksum(hashDict.get(auch[i].getChecksum()));
-                builder.setMain(main.build());
-                Protobuf.FileAuth reqPart = builder.build();
-                try {
-                    reqPart.writeDelimitedTo(group);
-                } catch (IOException ex) {
-                    //errorhandle: I'm running out of witty things to say...
-                }
-                i++;
-            }
-            
-            Pair<String, byte[]> groupOutput = new Pair(
-                    Utils.bytesToHex(hashDict.get(auch[startIndex].getChecksum()).toByteArray()).concat(" ") +
-                    auch[startIndex].getAuthToken(),
-                    group.toByteArray()
-            );
-            
-            output.add(groupOutput);
-        }
-        return output;
-    }
-    */
-    
+    //Maybe implement generics with this? It could be incorperated into EasyProto.
     private static Object ProtobufRequest(String host, String method, String url, byte[] body, String headers, Object msg)
     {
         
