@@ -26,7 +26,7 @@ public class AuthenticateController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DoubleBinding fontSize = pane.widthProperty().multiply(pane.heightProperty()).divide(20000);
+        DoubleBinding fontSize = pane.widthProperty().multiply(0.75).add(pane.heightProperty()).divide(50);
         Email.styleProperty().bind(Bindings.concat("-fx-font-size: ").concat(fontSize.asString()).concat(";"));
         Pass.styleProperty().bind(Email.styleProperty());
         Incorrect.styleProperty().bind(Email.styleProperty());
@@ -37,12 +37,11 @@ public class AuthenticateController implements Initializable {
     public void signIn() {
         String authResponse = null;
         if (!Email.getText().equals("") && !Pass.getText().equals("")) {
-            authResponse = iCloud.authenticate(Email.getText(), Pass.getText());
+            StaticStage.mbService = new iCloud(Email.getText(), Pass.getText());
         }
-        if (authResponse != null) {
-            StaticStage.dsid = iCloud.getDsPrsID(authResponse);
-            StaticStage.mmsAuth = iCloud.getMmeAuthToken(authResponse);
-            //StaticStage.loadScreen("ChooseRemoteDevice");
+        if (StaticStage.mbService.getStatus()) {
+            //SUCCESS!
+            StaticStage.loadScreen("ChooseRemoteDevice");
         } else {
             AuthBtn.setDefaultButton(false);
             if (!Email.getStyleClass().contains("red-line")) {

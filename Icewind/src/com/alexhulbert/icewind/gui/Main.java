@@ -1,6 +1,9 @@
 package com.alexhulbert.icewind.gui;
 import com.alexhulbert.icewind.iCloudTest;
+import java.io.File;
+import java.io.FileInputStream;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -18,8 +21,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //Pymobiledevice.init();
-        //iCloudTest.dryRun("Your AppleID", "Encode your password in Base64");
+        //iCloudTest.dryRun("email", "password");
         Font.loadFont(Main.class.getResource("binResc/Roboto-Thin.ttf").toExternalForm(), 24);
         StaticStage.mainStage = primaryStage;
         primaryStage.initStyle(StageStyle.TRANSPARENT);
@@ -29,5 +31,9 @@ public class Main extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setHeight(600);
         primaryStage.setWidth(800);
+        primaryStage.getIcons().addAll(
+                //This isn't working with my ultra-high DPI. :(
+                new Image(Main.class.getResourceAsStream("binResc/icon.png"))
+        );
     }
 }

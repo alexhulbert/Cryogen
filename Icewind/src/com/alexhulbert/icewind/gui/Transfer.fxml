@@ -54,10 +54,10 @@
 </rowConstraints>
 <children><ImageView fx:id="ImgDevice" fitHeight="300.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
 </children>
-</GridPane><Button fx:id="BtnBackup" mnemonicParsing="false" prefHeight="999.0" prefWidth="999.0" styleClass="arrow-left" text="&lt;" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
+</GridPane><Button fx:id="BtnBackup" mnemonicParsing="false" onMouseEntered="#backupInfo" onMouseExited="#noInfo" prefHeight="999.0" prefWidth="999.0" styleClass="arrow-left" text="&lt;" textAlignment="RIGHT" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
 <GridPane.margin>
 <Insets />
-</GridPane.margin></Button><Button fx:id="BtnRestore" mnemonicParsing="false" prefHeight="999.0" prefWidth="999.0" styleClass="arrow-right" text="&gt;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7">
+</GridPane.margin></Button><Button fx:id="BtnRestore" mnemonicParsing="false" onMouseEntered="#restoreInfo" onMouseExited="#noInfo" prefHeight="999.0" prefWidth="999.0" styleClass="arrow-right" text="&gt;" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7">
 <GridPane.margin>
 <Insets />
 </GridPane.margin></Button>
@@ -89,7 +89,7 @@
 </Label><Label fx:id="TxtHeader" alignment="CENTER" prefHeight="999.0" prefWidth="999.0" text="Backup" GridPane.columnIndex="8" GridPane.rowIndex="4">
 <font>
 <Font size="32.0" />
-</font></Label><Label alignment="TOP_LEFT" text="Label" GridPane.columnIndex="8" GridPane.rowIndex="5">
+</font></Label><Label fx:id="TxtContent" alignment="TOP_LEFT" text="[Info Blurb]" GridPane.columnIndex="8" GridPane.rowIndex="5" GridPane.rowSpan="4" GridPane.valignment="TOP">
 <font>
 <Font size="16.0" />
 </font></Label>

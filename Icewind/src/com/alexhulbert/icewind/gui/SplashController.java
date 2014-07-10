@@ -2,10 +2,6 @@ package com.alexhulbert.icewind.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.value.WritableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,10 +9,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
 public class SplashController implements Initializable {
 
@@ -30,10 +27,16 @@ public class SplashController implements Initializable {
     @FXML Label rightLabel;
     @FXML Label centerLabel;
     
+    @FXML ImageView mainLogo;
+    @FXML GridPane logoCase;
+    
+    @FXML GridPane Pane;
+    
     EasyAnimation ea;
     
     public void chaching() { //hehe :)
         //TODO: Implement donate button
+        com.alexhulbert.icewind.Utils.noop();
     }
     
     public void next() {
@@ -51,6 +54,9 @@ public class SplashController implements Initializable {
         
         skip.prefWidthProperty().bind(skipCase.widthProperty().multiply(0.75));
         skip.prefHeightProperty().bind(skipCase.heightProperty().multiply(0.75));
+        
+        mainLogo.fitHeightProperty().bind(logoCase.widthProperty().divide(550).multiply(112));
+        mainLogo.fitWidthProperty().bind(logoCase.widthProperty());
         
         centerLabel.setText("Taconut");
         
@@ -78,7 +84,7 @@ public class SplashController implements Initializable {
         ea.push(centerLabel.         fontProperty(), 6250, Font.font("Roboto Thin", 24));
         ea.push(centerLabel.    alignmentProperty(), 6250, Pos.TOP_LEFT);
         ea.push(centerLabel.textAlignmentProperty(), 6250, TextAlignment.LEFT);
-        ea.push(centerLabel.         textProperty(), 6250, "ADISAI: Logo\nIH8SN0W: Inspiration\nLOREM: Ipsum\nBLAH: blahblah\nTHIS: is a test");
+        ea.push(centerLabel.         textProperty(), 6250, "CHRIZZIO1029: Logo\nIH8SN0W: Inspiration\nJEWELSEA: JavaFX Help\nMSFTGUY: JSyringe/SSH-RD\nLOREM: Ipsum");
         ea.push(centerLabel.      opacityProperty(), 6250, 0);
         ea.push(centerLabel.      opacityProperty(), 6500, 0);
         ea.push(centerLabel.      opacityProperty(), 7250, 1);

@@ -27,8 +27,14 @@ public class TransferController implements Initializable {
     @FXML private Label TxtBackup;
     @FXML private Label TxtName;
     @FXML private Label TxtRestore;
-
+    
+    @FXML private Label TxtHeader;
+    @FXML private Label TxtContent;
+    
     @FXML private ImageView ImgDevice;
+    
+    private static final String bakpStr = "Lorem Ipsem BACKUP";
+    private static final String rstrStr = "Lorem Ipsen RESTORE";
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -40,5 +46,44 @@ public class TransferController implements Initializable {
     
     public void back() {
         StaticStage.loadScreen("ChooseDevice");
+    }
+    
+    /**
+     * Hides info panel
+     */
+    public void noInfo() {
+        EasyAnimation ea = new EasyAnimation();
+        ea.push(TxtHeader .textProperty(), 000, TxtHeader .getText());
+        ea.push(TxtContent.textProperty(), 000, TxtContent.getText());
+        
+        ea.push(TxtHeader .textProperty(), 250, "");
+        ea.push(TxtContent.textProperty(), 250, "");
+        ea.play();
+    }
+    
+    /**
+     * Display a little info about backing up
+     */
+    public void backupInfo() {
+        EasyAnimation ea = new EasyAnimation();
+        ea.push(TxtHeader .textProperty(), 000, TxtHeader .getText());
+        ea.push(TxtContent.textProperty(), 000, TxtContent.getText());
+        
+        ea.push(TxtHeader .textProperty(), 250, "Backup");
+        ea.push(TxtContent.textProperty(), 250, bakpStr);
+        ea.play();
+    }
+    
+    /**
+     * Display some info on restoring
+     */
+    public void restoreInfo() {
+        EasyAnimation ea = new EasyAnimation();
+        ea.push(TxtHeader .textProperty(), 000, TxtHeader .getText());
+        ea.push(TxtContent.textProperty(), 000, TxtContent.getText());
+        
+        ea.push(TxtHeader .textProperty(), 250, "Restore");
+        ea.push(TxtContent.textProperty(), 250, rstrStr);
+        ea.play();
     }
 }

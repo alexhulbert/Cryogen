@@ -1,5 +1,6 @@
 package com.alexhulbert.icewind.gui;
 
+import com.alexhulbert.icewind.iCloud;
 import com.alexhulbert.jmobiledevice.Lockdown;
 import insidefx.undecorator.Undecorator;
 import java.io.IOException;
@@ -24,8 +25,7 @@ public class StaticStage {
     public static List<Lockdown> devices = new ArrayList<Lockdown>();
     public static String[] bigImages = new String[3];
     
-    public static int dsid;
-    public static String mmsAuth;
+    public static iCloud mbService;
     
     public static Lockdown dLockdown;
     public static Image dImg = null;
@@ -75,6 +75,7 @@ public class StaticStage {
         mainStage.show();
         mainStage.setWidth(w);
         mainStage.setHeight(h);
+        Utils.fitFont(u.getChildren(), u);
         //Refresh Drop Shadow
         mainStage.setIconified(true);
         mainStage.setIconified(false);
