@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Map;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
+import xmlwise.XmlParseException;
 
 /**
  *
@@ -20,45 +21,31 @@ public class iCloudTest {
         FileUtils.writeByteArrayToFile(outFile, cis.readRawBytes(cis.readRawVarint32()));
     }
     
-    public static void dryRun(String uname, String pass) throws IOException {
-        //authenticating
-        String authData = iCloud.authenticate(uname, pass);
-        String dsid = iCloud.getDsPrsID(authData).toString();
-        String mmeAuth = iCloud.getMmeAuthToken(authData);
-        
-        //Getting information
-        String infoPlist = iCloud.getAccountInfo(dsid, mmeAuth);
-        mmeAuth = iCloud.getMmeAuthToken(infoPlist);
-        String pnum = iCloud.getPNum(infoPlist);
+    public static void dryRun(String uname, String pass) throws IOException, XmlParseException {
+        // Yay!
+        iCloud client = new iCloud(uname, pass);
         
         //Retrieving list of devices
-        byte[] udids = iCloud.listDevices(pnum, dsid, mmeAuth);
-        String udid1 = Utils.bytesToHex(Protocol.DeviceUdids.parseFrom(udids).getUdids(0).toByteArray());
-        byte[] snapshotInfo = iCloud.getInfo(pnum, dsid, mmeAuth, udid1);
+        String udid1 = client.listDevices(0);
+        byte[] snapshotInfo = client.getBackup(udid1);
         int sid = Protocol.Device.parseFrom(snapshotInfo).getBackup(0).getSnapshotID();
-        byte[] fileList = iCloud.listFiles(
-                pnum,
-                dsid,
-                mmeAuth,
+        byte[] fileList = client.listFiles(
                 udid1,
                 sid,
                 0,
                 (long) (Math.pow(2, 16) - 1)
         );
-        Protocol.File[] files = iCloud.parseFiles(fileList);
-        byte[] getFilesRequest = iCloud.buildGetFiles(files);
-        byte[] gfResponse = iCloud.getFiles(
+        Protocol.File[] files = client.parseFiles(fileList);
+        byte[] getFilesRequest = client.buildGetFiles(files);
+        byte[] gfResponse = client.getFiles(
                 getFilesRequest,
-                pnum,
-                dsid,
-                mmeAuth,
                 udid1,
                 sid
         );
-        Protocol.AuthChunk[] ac = iCloud.parseGetFiles(gfResponse);
-        Map<ByteString, ByteString> hd = iCloud.buildHashDictionary(files);
-        Pair<String, Protocol.FileAuth> fa = iCloud.buildAuthorizeGet(ac, hd);
-        byte[] b = iCloud.authorizeGet(fa.getValue().toByteArray(), fa.getKey(), pnum, dsid, mmeAuth);
+        Protocol.AuthChunk[] ac = client.parseGetFiles(gfResponse);
+        Map<ByteString, ByteString> hd = client.buildHashDictionary(files);
+        Pair<String, Protocol.FileAuth> fa = client.buildAuthorizeGet(ac, hd);
+        byte[] b = client.authorizeGet(fa.getValue().toByteArray(), fa.getKey());
         Protocol.AuthorizeGet authGet = Protocol.AuthorizeGet.parseFrom(b);
         Utils.noop();
     }

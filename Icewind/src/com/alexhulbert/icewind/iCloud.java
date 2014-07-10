@@ -22,6 +22,16 @@ import xmlwise.XmlParseException;
  */
 public class iCloud {
     public static String fsep = File.separator; //Writing "File.separator" takes too long
+    private static Integer dsPrsID;
+    private static String mmeAuthToken;
+    private static String mobileBackupUrl;
+    private static String contentUrl;
+    
+    public iCloud(String appleID, String password) throws XmlParseException {
+        this.authenticate(appleID, password);
+        this.getAccountSettings();
+    }
+    
     /**
      * Restores a decrypted iCloud backup onto the device
      * @param sshPath     path to where the device is mounted
@@ -60,52 +70,8 @@ public class iCloud {
             }
         }
     }
-    
-    /**
-     * Parses the dsPrsID out of the auth plist
-     * @param plist The plist from "authenticate"
-     * @return The Destination Signaling Identifier
-     */
-    public static Integer getDsPrsID(String plist) {
-        try {
-            Map<String, Object> properties = Plist.fromXml(plist);
-            return (Integer)((Map<String, Object>) properties.get("appleAccountInfo")).get("dsPrsID");
-        } catch (XmlParseException e) {
-            return null;
-        }
-    }
-    
-    /**
-     * Parses the mmeAuthToken out of the authentication plist
-     * @param plist The plist from "authenticate"
-     * @return The Mobile Me Authentication Token
-     */
-    public static String getMmeAuthToken(String plist) {
-        try {
-            Map<String, Object> properties = Plist.fromXml(plist);
-            return (String)((Map<String, Object>)properties.get("tokens")).get("mmeAuthToken");
-        } catch (XmlParseException e) {
-            return null;
-        }
-    }
-    
-    /**
-     * Gets the number after "p" in iCloud settings (p##-mobilebackup.icloud.com)
-     * @param plist The plist generated from "get_account_settings"
-     * @return The pnum to be used in "get_backupudid"
-     */
-    public static String getPNum(String plist) {
-        try {
-            Map<String, Object> properties = Plist.fromXml(plist);
-            Map<String, Object> mobileMe = (Map<String, Object>) properties.get("com.apple.mobileme");
-            Map<String, Object> backupInfo = (Map<String, Object>) mobileMe.get("com.apple.Dataclass.Backup");
-            String backupUrl = (String) backupInfo.get("url");
-            //"https://p16-mobilebackup.icloud.com:443"
-            return backupUrl.replaceAll("https://p([0-9]+)-mobilebackup.icloud.com:443$", "$1");
-        } catch (XmlParseException e) {
-            return null;
-        }
-    }
+        
+   
     
     /**
      * Authenticates you with apple
@@ -113,10 +79,17 @@ public class iCloud {
      * @param password
      * @return A plist containing your mmeAuthToken and dsPrsID
      */
-    public static String authenticate(String appleID, String password) {
+    private void authenticate(String appleID, String password) throws XmlParseException {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Authorization", "Basic " + Utils.encode(appleID, password));
-        return Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/authenticate/" + appleID, true);
+        String plist = Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/authenticate/" + appleID, true);
+        Map<String, Object> properties = Plist.fromXml(plist);
+        
+        // Parse the dsPrsID out of the auth plist
+        this.dsPrsID = (Integer)((Map<String, Object>) properties.get("appleAccountInfo")).get("dsPrsID");
+        
+        // Parse the mmeAuthToken out of the authentication plist
+        this.mmeAuthToken = (String)((Map<String, Object>)properties.get("tokens")).get("mmeAuthToken");
     }
     
     /**
@@ -125,10 +98,20 @@ public class iCloud {
      * @param mmeAuthToken The Mobile Me Authentication Token
      * @return Information about your account
      */
-    public static String getAccountInfo(String dsPrsID, String mmeAuthToken) {
+    private void getAccountSettings() throws XmlParseException {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/get_account_settings", true);
+        authHeaders.put("Authorization", "Basic " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        String accountInfo =  Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/get_account_settings", true);
+        Map<String, Object> properties = Plist.fromXml(accountInfo);
+        Map<String, Object> mobileMe = (Map<String, Object>) properties.get("com.apple.mobileme");
+        
+        // Get MobileBackup URL
+        this.mobileBackupUrl = ((Map<String, Object>) mobileMe.get("com.apple.Dataclass.Backup")).
+                                    get("url").toString().replaceAll("https://(p[0-9]+-mobilebackup.icloud.com):443$", "$1");
+        
+        // Get Content URL
+        this.contentUrl = ((Map<String, Object>) mobileMe.get("com.apple.Dataclass.Content")).
+                                    get("url").toString().replaceAll("https://(p[0-9]+-content.icloud.com):443$", "$1");
     }
     
     /**
@@ -138,11 +121,17 @@ public class iCloud {
      * @param mmeAuthToken <meAuthToken (From get_account_settings)
      * @return A list of udids linked with the account (encoded with Protobuf)
      */
-    public static byte[] listDevices(String pNum, String dsPrsID, String mmeAuthToken) {
+    public Protocol.DeviceUdids listDevices() throws InvalidProtocolBufferException {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID, true);
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        byte[] buffer = Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString(), true);
+        return Protocol.DeviceUdids.parseFrom(buffer);
     }
+    
+    public String listDevices(int index) throws InvalidProtocolBufferException {
+        return Utils.bytesToHex(this.listDevices().getUdids(index).toByteArray());
+    }
+            
     
     /**
      * Gets information on the device
@@ -152,10 +141,10 @@ public class iCloud {
      * @param backupUDID The udid of the device to retrieve info on
      * @return Information of the device (encoded with protobuf)
      */
-    public static byte[] getInfo(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
+    public byte[] getBackup(String backupUDID) {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID, true);
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID, true);
     }
     
     /**
@@ -166,10 +155,10 @@ public class iCloud {
      * @param backupUDID The udid of the device to retrieve info on
      * @return Keys for decrypting icloud data (encoded with protobuf)
      */
-    public static byte[] getKeys(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID) {
+    public byte[] getKeys(String backupUDID) {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/getKeys", true);
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/getKeys", true);
     }
     
     /**
@@ -183,29 +172,29 @@ public class iCloud {
      * @param limit Max length
      * @return A list of files to download
      */
-    public static byte[] listFiles(String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID, int offset, Long limit) {
+    public byte[] listFiles(String backupUDID, int snapshotID, int offset, Long limit) {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset + (limit == null ? "" : "&limit=" + String.valueOf(limit)), true);
+        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset + (limit == null ? "" : "&limit=" + String.valueOf(limit)), true);
     }
     
-    public static byte[] authorizeGet(byte[] data, String auth, String pNum, String dsPrsID, String mmeAuthToken) {
+    public byte[] authorizeGet(byte[] data, String auth) {
         Map<String, String> authHeaders = new HashMap<String, String>();
         authHeaders.put("Accept", "*/*");
         authHeaders.put("User-Agent", "MobileBackup/5.1.1 (9B206; iPhone4,1)");
         authHeaders.put("X-Apple-Request-UUID", "900DFACE-BABE-C001-A550-B00B1E52C0DE"); //Now that's what I call magic hex.
         authHeaders.put("X-Apple-mmcs-Proto-Version", "3.3");
-        authHeaders.put("X-Apple-mme-dsid", dsPrsID);
+        authHeaders.put("X-Apple-mme-dsid", this.dsPrsID.toString());
         authHeaders.put("X-Apple-mmcs-DataClass", "com.apple.Dataclass.Backup");
         authHeaders.put("X-mme-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
         authHeaders.put("X-Apple-mmcs-auth", auth);
-        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), "p" + pNum + "-content.icloud.com", "/" + dsPrsID + "/authorizeGet", true);    
+        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), this.contentUrl, "/" + this.dsPrsID.toString() + "/authorizeGet", true);    
     }
     
-    public static byte[] getFiles(byte[] data, String pNum, String dsPrsID, String mmeAuthToken, String backupUDID, int snapshotID) {
+    public byte[] getFiles(byte[] data, String backupUDID, int snapshotID) {
         Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "Basic " + Utils.encode(dsPrsID, mmeAuthToken));
-        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), "p" + pNum + "-mobilebackup.icloud.com", "/mbs/" + dsPrsID + "/" + backupUDID + "/" + snapshotID + "/getFiles", true);
+        authHeaders.put("Authorization", "Basic " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/" + snapshotID + "/getFiles", true);
     }
     
     public static Protocol.File[] parseFiles(byte[] fileList) {
@@ -350,4 +339,10 @@ public class iCloud {
         return output;
     }
     */
+    
+    private static Object ProtobufRequest(String host, String method, String url, byte[] body, String headers, Object msg)
+    {
+        
+        return null;
+    }
 }
