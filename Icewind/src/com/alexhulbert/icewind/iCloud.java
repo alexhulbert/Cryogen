@@ -350,8 +350,7 @@ public class iCloud {
         Protocol.File[] files = this.parseFiles(fileList);
         byte[] gkResponse = this.getKeys(backupUDID);
         Protocol.Keys actualKeys = Protocol.Keys.parseFrom(gkResponse);
-        String data = actualKeys.getKeySet(1).getData();
-        Keybag kbag = new Keybag(data.getBytes());
+        Keybag kbag = new Keybag(actualKeys.getKeySet(1).getDataBytes().toByteArray());
 
         if (kbag.getTYPE() != Keybag.Types.BACKUP_KEYBAG && kbag.getTYPE() != Keybag.Types.OTA_KEYBAG)
         {
@@ -359,7 +358,7 @@ public class iCloud {
             return;
         }
 
-        String passcode = new String(actualKeys.getKeySet(0).getData().getBytes());
+        String passcode = new String(actualKeys.getKeySet(0).getDataBytes().toByteArray());
 
         PBKDF2Parameters p = new PBKDF2Parameters("HmacSHA1", "UTF-8", kbag.getSALT(), kbag.getITER());
         PBKDF2Engine e = new PBKDF2Engine(p);
@@ -367,4 +366,3 @@ public class iCloud {
         Utils.noop();
 
     }
-}
