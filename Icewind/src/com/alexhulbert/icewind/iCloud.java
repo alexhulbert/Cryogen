@@ -16,6 +16,10 @@ import org.apache.commons.io.FileUtils;
 import xmlwise.Plist;
 import xmlwise.XmlParseException;
 
+import org.catacombae.hfsexplorer.iphone.Keybag;
+import de.rtner.security.auth.spi.PBKDF2Engine;
+import de.rtner.security.auth.spi.PBKDF2Parameters;
+
 /**
  *
  * @author Taconut
