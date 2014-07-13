@@ -23,11 +23,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Parser;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -37,11 +33,6 @@ public class EasyProto<T extends GeneratedMessage> {
     private final byte[] inp;
     private final Parser p;
     
-    /**
-     * A class for easily parsing/decoding Varint-encoded messages.
-     * Should include the downloading part as well if I get around to it.
-     * @param parser Use Protocol.T.PARSER to get this. Used to parse the messages
-     */
     protected EasyProto(Parser<T> parser, byte[] input) {
         inp = input;
         p   = parser;
@@ -60,7 +51,7 @@ public class EasyProto<T extends GeneratedMessage> {
      * Parse and decode a varint-delimited, protobuf-encoded Message array
      * @return An array of T messages
      */
-    public T[] parseVarint() {
+    public List<T> parseVarint() {
         ByteArrayInputStream bais = new ByteArrayInputStream(inp);
         List<T> lst = new ArrayList<T>();
         while (bais.available() > 0) {
@@ -68,9 +59,11 @@ public class EasyProto<T extends GeneratedMessage> {
                 lst.add((T) p.parseDelimitedFrom(bais));
             } catch (InvalidProtocolBufferException ex) {
                 //TODO: Fix this
+                ex.printStackTrace();
             }
         }
-        return (T[]) lst.toArray();
+        
+        return lst;
     }
     
     /**
@@ -97,7 +90,7 @@ public class EasyProto<T extends GeneratedMessage> {
      * @param loadText The prefixed
      * @return An array of T messages
      */
-    public T[] parseVarint(LoadingBar lb, String loadText) {
+    public List<T> parseVarint(LoadingBar lb, String loadText) {
         ByteArrayInputStream counter = new ByteArrayInputStream(inp);
         ByteArrayInputStream parser  = new ByteArrayInputStream(inp); //Pass-by-reference
         long totalCount = 0;
@@ -118,6 +111,6 @@ public class EasyProto<T extends GeneratedMessage> {
                 ex.printStackTrace(); //TODO: Fix this
             }
         }
-        return (T[]) output.toArray();
+        return output;
     }
 }

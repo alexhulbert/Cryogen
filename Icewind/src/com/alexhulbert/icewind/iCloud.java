@@ -116,7 +116,7 @@ public class iCloud {
         ProtoBuilder pb = new ProtoBuilder();
         pb.setHost("setup.icloud.com");
         pb.setPath("/setup/get_account_settings");
-        pb.addHeader("Authorization", "Basic " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        pb.addHeader("Authorization", "Basic " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
         String accountInfo = pb.getResponse();
         
         Map<String, Object> properties;
@@ -171,7 +171,7 @@ public class iCloud {
     public Protocol.Device getBackup(String backupUDID) throws InvalidResponseException {
         ProtoBuilder pb = new ProtoBuilder();
         pb.setHost(mobileBackupUrl);
-        pb.setPath(dsPrsID + "/" + backupUDID);
+        pb.setPath("/mbs/" + dsPrsID + "/" + backupUDID);
         pb.addHeader("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
         try {
             return pb.build(Protocol.Device.PARSER).parse();
@@ -210,22 +210,18 @@ public class iCloud {
     public Protocol.File[] listFiles(String backupUDID, int snapshotID, int offset, Long limit) throws InvalidResponseException {
         ProtoBuilder pb = new ProtoBuilder();
         pb.setHost(mobileBackupUrl);
-        pb.setPath("/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/" + snapshotID + "/listFiles");
-        pb.addHeader("offset", String.valueOf(offset));
+        pb.setPath(String.format("/mbs/%s/%s/%s/listFiles?offset=%s&limit=%s", dsPrsID.toString(), backupUDID, snapshotID, offset, (limit == null) ? "65536" : String.valueOf(limit)));
         pb.addHeader("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
-        if (limit != null) {
-            pb.addHeader("limit", String.valueOf(limit));
-        }
         EasyProto<Protocol.File> ep = pb.build(Protocol.File.PARSER);
         if (prog != null) {
             prog.activate(true);
             prog.intermediate();
             prog.status("Calculating File Size..."); //Just like Windows Explorer!
-            Protocol.File[] response = ep.parseVarint(prog, "Parsing File List");
+            Protocol.File[] response = ep.parseVarint(prog, "Parsing File List").toArray(new Protocol.File[0]);
             prog.activate(false);
             return response;
         } else {
-            return ep.parseVarint();
+           return ep.parseVarint().toArray(new Protocol.File[0]);
         }
     }
     
@@ -284,14 +280,15 @@ public class iCloud {
             try {
                 instance.build().writeDelimitedTo(oust);
             } catch (IOException e) {
-                //errorhandle: I guess user's not getting their flappy bird save.
+                e.printStackTrace(); //errorhandle: I guess user's not getting their flappy bird save.
             }
         }
         ProtoBuilder pb = new ProtoBuilder();
         pb.setHost(mobileBackupUrl);
         pb.setPath(String.format("/mbs/%s/%s/%s/getFiles", dsPrsID, backupUDID, snapshotID));
-        pb.addHeader("Authorization", Utils.encode(dsPrsID.toString(), mmeAuthToken));
-        return pb.build(Protocol.AuthChunk.PARSER).parseVarint();
+        pb.addHeader("Authorization", "Basic " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
+        pb.setBody(oust.toByteArray());
+        return pb.build(Protocol.AuthChunk.PARSER).parseVarint().toArray(new Protocol.AuthChunk[0]);
     }
 
     public static Map<ByteString, ByteString> buildHashDictionary(Protocol.File[] sources) {
@@ -301,8 +298,8 @@ public class iCloud {
         }
         return dict;
     }
-
-    public void downloadBackup(String backupUDID, String outputFolder) throws InvalidResponseException {
+  
+    /*public void downloadBackup(String backupUDID, String outputFolder) throws InvalidResponseException {
         byte[] snapshotInfo = this.getBackup(backupUDID);
         int sid = Protocol.Device.parseFrom(snapshotInfo).getBackup(0).getSnapshotID();
         Protocol.File[] files = this.listFiles(
@@ -326,5 +323,5 @@ public class iCloud {
         PBKDF2Engine e = new PBKDF2Engine(p);
         p.setDerivedKey(e.deriveKey(passcode));
         Utils.noop();
-    }
+    }*/
 }

@@ -25,29 +25,19 @@ public class iCloudTest {
     public static void dryRun(String uname, String pass) throws InvalidResponseException {
         // Yay!
         iCloud client = new iCloud(uname, pass);
-        
         //Retrieving list of devices
         String udid1 = client.listDevices(0);
         Protocol.Device snapshotInfo = client.getBackup(udid1);
         int sid = snapshotInfo.getBackup(0).getSnapshotID();
-        byte[] fileList = client.listFiles(
+        Protocol.File[] files = client.listFiles(
                 udid1,
                 sid,
                 0,
-                (long) (Math.pow(2, 16) - 1)
+                65535l
         );
-        Protocol.File[] files = client.parseFiles(fileList);
-        byte[] getFilesRequest = client.buildGetFiles(files);
-        byte[] gfResponse = client.getFiles(
-                getFilesRequest,
-                udid1,
-                sid
-        );
-        Protocol.AuthChunk[] ac = client.parseGetFiles(gfResponse);
-        Map<ByteString, ByteString> hd = client.buildHashDictionary(files);
-        Pair<String, Protocol.FileAuth> fa = client.buildAuthorizeGet(ac, hd);
-        byte[] b = client.authorizeGet(fa.getValue().toByteArray(), fa.getKey());
-        Protocol.AuthorizeGet authGet = Protocol.AuthorizeGet.parseFrom(b);
+        Protocol.AuthChunk[] gfResponse = client.getFiles(files, udid1, sid);
+        Map<ByteString, ByteString> hd = iCloud.buildHashDictionary(files);
+        Protocol.FileAuth authGet = client.authorizeGet(gfResponse, hd);
         Utils.noop();
     }
 }

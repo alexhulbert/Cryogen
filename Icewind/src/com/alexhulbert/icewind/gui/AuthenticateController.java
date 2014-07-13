@@ -1,5 +1,6 @@
 package com.alexhulbert.icewind.gui;
 
+import com.alexhulbert.icewind.autocol.InvalidResponseException;
 import com.alexhulbert.icewind.iCloud;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,20 +38,19 @@ public class AuthenticateController implements Initializable {
     public void signIn() {
         String authResponse = null;
         if (!Email.getText().equals("") && !Pass.getText().equals("")) {
-            StaticStage.mbService = new iCloud(Email.getText(), Pass.getText());
-        }
-        if (StaticStage.mbService.getStatus()) {
-            //SUCCESS!
-            StaticStage.loadScreen("ChooseRemoteDevice");
-        } else {
-            AuthBtn.setDefaultButton(false);
-            if (!Email.getStyleClass().contains("red-line")) {
-                Email.getStyleClass().add("red-line");
+            try {
+                StaticStage.mbService = new iCloud(Email.getText(), Pass.getText());
+                StaticStage.loadScreen("ChooseRemoteDevice");
+            } catch (InvalidResponseException irex) {
+                AuthBtn.setDefaultButton(false);
+                if (!Email.getStyleClass().contains("red-line")) {
+                    Email.getStyleClass().add("red-line");
+                }
+                if (!Pass.getStyleClass().contains("red-line")) {
+                    Pass.getStyleClass().add("red-line");
+                }
+                Utils.fadeIn(Incorrect, 250);
             }
-            if (!Pass.getStyleClass().contains("red-line")) {
-                Pass.getStyleClass().add("red-line");
-            }
-            Utils.fadeIn(Incorrect, 250);
         }
     }
     
