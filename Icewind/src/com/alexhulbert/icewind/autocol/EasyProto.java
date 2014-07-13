@@ -15,14 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.alexhulbert.icewind;
+package com.alexhulbert.icewind.autocol;
 
+import com.alexhulbert.icewind.LoadingBar;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Parser;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,12 +40,11 @@ public class EasyProto<T extends GeneratedMessage> {
     /**
      * A class for easily parsing/decoding Varint-encoded messages.
      * Should include the downloading part as well if I get around to it.
-     * @param parser USe Protocol.T.PARSER to get this. Used to parse the messages
-     * @param input The stream of bytes that will be decrypted.
+     * @param parser Use Protocol.T.PARSER to get this. Used to parse the messages
      */
-    public EasyProto(Parser<T> parser, byte[] input) {
+    protected EasyProto(Parser<T> parser, byte[] input) {
         inp = input;
-        p = parser;
+        p   = parser;
     }
     
     /**
