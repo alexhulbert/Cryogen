@@ -37,7 +37,7 @@ public class iCloudTest {
         );
         Protocol.AuthChunk[] gfResponse = client.getFiles(files, udid1, sid);
         Map<ByteString, ByteString> hd = iCloud.buildHashDictionary(files);
-        Protocol.FileAuth authGet = client.authorizeGet(gfResponse, hd);
+        Protocol.AuthorizeGet authGet = client.authorizeGet(gfResponse, hd);
         Utils.noop();
     }
 }

@@ -232,7 +232,7 @@ public class iCloud {
      * @return Invalid response to the protobuf
      * @throws com.alexhulbert.icewind.autocol.InvalidResponseException Invalid response to the protobuf
      */
-    public Protocol.FileAuth authorizeGet(Protocol.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) throws InvalidResponseException {
+    public Protocol.AuthorizeGet authorizeGet(Protocol.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) throws InvalidResponseException {
         Protocol.FileAuth.Builder builder = Protocol.FileAuth.newBuilder();
         for (Protocol.AuthChunk file : auch) {
             Protocol.AuthChunk.Builder subBuilder = Protocol.AuthChunk.newBuilder();
@@ -254,7 +254,7 @@ public class iCloud {
         pb.addHeader("X-mme-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
         pb.addHeader("X-Apple-mmcs-auth", Utils.bytesToHex(hashDict.get(auch[0].getChecksum()).toByteArray()).concat(" ") + auch[0].getAuthToken());
         try {
-            return pb.build(Protocol.FileAuth.PARSER).parse();
+            return pb.build(Protocol.AuthorizeGet.PARSER).parse();
         } catch (InvalidProtocolBufferException ipbe) {
             throw new InvalidResponseException("Response was not properly encoded in Protobuf format", ipbe);
         }
