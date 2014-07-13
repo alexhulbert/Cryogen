@@ -5,17 +5,13 @@ import com.alexhulbert.icewind.autocol.InvalidResponseException;
 import com.alexhulbert.icewind.autocol.ProtoBuilder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import de.rtner.security.auth.spi.PBKDF2Engine;
-import de.rtner.security.auth.spi.PBKDF2Parameters;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
-import org.catacombae.hfsexplorer.iphone.Keybag;
 import xmlwise.Plist;
 import xmlwise.XmlParseException;
 
