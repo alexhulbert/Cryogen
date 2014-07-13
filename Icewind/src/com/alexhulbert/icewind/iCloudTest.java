@@ -1,5 +1,6 @@
 package com.alexhulbert.icewind;
 
+import com.alexhulbert.icewind.autocol.InvalidResponseException;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import java.io.File;
@@ -21,14 +22,14 @@ public class iCloudTest {
         FileUtils.writeByteArrayToFile(outFile, cis.readRawBytes(cis.readRawVarint32()));
     }
     
-    public static void dryRun(String uname, String pass) throws IOException, XmlParseException {
+    public static void dryRun(String uname, String pass) throws InvalidResponseException {
         // Yay!
         iCloud client = new iCloud(uname, pass);
         
         //Retrieving list of devices
         String udid1 = client.listDevices(0);
-        byte[] snapshotInfo = client.getBackup(udid1);
-        int sid = Protocol.Device.parseFrom(snapshotInfo).getBackup(0).getSnapshotID();
+        Protocol.Device snapshotInfo = client.getBackup(udid1);
+        int sid = snapshotInfo.getBackup(0).getSnapshotID();
         byte[] fileList = client.listFiles(
                 udid1,
                 sid,

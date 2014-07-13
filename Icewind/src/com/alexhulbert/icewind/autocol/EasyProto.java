@@ -66,7 +66,9 @@ public class EasyProto<T extends GeneratedMessage> {
         while (bais.available() > 0) {
             try {
                 lst.add((T) p.parseDelimitedFrom(bais));
-            } catch (InvalidProtocolBufferException ex) {}
+            } catch (InvalidProtocolBufferException ex) {
+                //TODO: Fix this
+            }
         }
         return (T[]) lst.toArray();
     }
@@ -82,7 +84,9 @@ public class EasyProto<T extends GeneratedMessage> {
             try {
                 p.parseDelimitedFrom(bais);
                 s++;
-            } catch (InvalidProtocolBufferException ex) {}
+            } catch (InvalidProtocolBufferException ex) {
+                ex.printStackTrace(); //TODO: Fix this
+            }
         }
         return s;
     }
@@ -110,7 +114,9 @@ public class EasyProto<T extends GeneratedMessage> {
                 output.add((T) p.parseDelimitedFrom(parser));
                 lb.progress((i*100)/totalCount);
                 lb.status(loadText + String.format(" (%s/%s)", i, totalCount));
-            } catch (InvalidProtocolBufferException ex) {}
+            } catch (InvalidProtocolBufferException ex) {
+                ex.printStackTrace(); //TODO: Fix this
+            }
         }
         return (T[]) output.toArray();
     }

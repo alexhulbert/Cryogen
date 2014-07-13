@@ -1,24 +1,23 @@
 package com.alexhulbert.icewind;
 
+import com.alexhulbert.icewind.autocol.EasyProto;
+import com.alexhulbert.icewind.autocol.InvalidResponseException;
+import com.alexhulbert.icewind.autocol.ProtoBuilder;
 import com.google.protobuf.ByteString;
-import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.io.ByteArrayInputStream;
+import de.rtner.security.auth.spi.PBKDF2Engine;
+import de.rtner.security.auth.spi.PBKDF2Parameters;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
+import org.catacombae.hfsexplorer.iphone.Keybag;
 import xmlwise.Plist;
 import xmlwise.XmlParseException;
-
-import org.catacombae.hfsexplorer.iphone.Keybag;
-import de.rtner.security.auth.spi.PBKDF2Engine;
-import de.rtner.security.auth.spi.PBKDF2Parameters;
 
 /**
  *
@@ -31,14 +30,13 @@ public class iCloud {
     private String mobileBackupUrl;
     private String contentUrl;
     private LoadingBar prog = null;
-    private boolean status = true;
 
-    public iCloud(String appleID, String password) {
+    public iCloud(String appleID, String password) throws InvalidResponseException {
         this.authenticate(appleID, password);
         this.getAccountSettings();
     }
 
-    public iCloud(String appleID, String password, LoadingBar progressBar) {
+    public iCloud(String appleID, String password, LoadingBar progressBar) throws InvalidResponseException {
         this.authenticate(appleID, password);
         this.getAccountSettings();
         this.prog = progressBar;
@@ -90,25 +88,22 @@ public class iCloud {
      * @param password Password for your AppleID
      * @return A plist containing your mmeAuthToken and dsPrsID
      */
-    private void authenticate(String appleID, String password) {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "Basic " + Utils.encode(appleID, password));
-        String plist = Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/authenticate/" + appleID, true);
-
+    private void authenticate(String appleID, String password) throws InvalidResponseException {
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost("setup.icloud.com");
+        pb.setPath("/setup/authenticate/" + appleID);
+        pb.addHeader("Authorization", "Basic " + Utils.encode(appleID, password));
+        String plist = pb.getResponse();
+        
         Map<String, Object> properties;
         try {
             properties = Plist.fromXml(plist);
         } catch(XmlParseException xpex) {
-            //errorhandle: Isn't just setting the status variable good enough?
-            status = false;
-            return; //Too bad...
+            throw new InvalidResponseException("Response was not properly encoded in XML", xpex);
         }
-
-        // Parse the dsPrsID out of the auth plist
-        this.dsPrsID = (Integer)((Map<String, Object>) properties.get("appleAccountInfo")).get("dsPrsID");
-
-        // Parse the mmeAuthToken out of the authentication plist
-        this.mmeAuthToken = (String)((Map<String, Object>)properties.get("tokens")).get("mmeAuthToken");
+        
+        dsPrsID = (Integer)((Map<String, Object>) properties.get("appleAccountInfo")).get("dsPrsID");   //Parse the dsPrsID out of the auth plist
+        mmeAuthToken = (String)((Map<String, Object>)properties.get("tokens")).get("mmeAuthToken");     //Parse the mmeAuthToken out of the authentication plist
     }
 
     /**
@@ -117,176 +112,167 @@ public class iCloud {
      * @param mmeAuthToken The Mobile Me Authentication Token
      * @return Information about your account
      */
-    private void getAccountSettings() {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "Basic " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
-        String accountInfo =  Utils.get(Utils.getIcpHeaders(authHeaders), "setup.icloud.com", "/setup/get_account_settings", true);
+    private void getAccountSettings() throws InvalidResponseException {
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost("setup.icloud.com");
+        pb.setPath("/setup/get_account_settings");
+        pb.addHeader("Authorization", "Basic " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
+        String accountInfo = pb.getResponse();
+        
         Map<String, Object> properties;
         try {
             properties = Plist.fromXml(accountInfo);
         } catch (XmlParseException xpex) {
-            status = false;
-            //errorhandle: I REALLY don't want to have to go through all of these
-            return;
+            throw new InvalidResponseException("Response was not properly encoded in XML", xpex);
         }
+        
         Map<String, Object> mobileMe = (Map<String, Object>) properties.get("com.apple.mobileme");
-
-        // Get MobileBackup URL
-        this.mobileBackupUrl = ((Map<String, Object>) mobileMe.get("com.apple.Dataclass.Backup")).
-                                    get("url").toString().replaceAll("https://(p[0-9]+-mobilebackup.icloud.com):443$", "$1");
-
-        // Get Content URL
-        this.contentUrl = ((Map<String, Object>) mobileMe.get("com.apple.Dataclass.Content")).
-                                    get("url").toString().replaceAll("https://(p[0-9]+-content.icloud.com):443$", "$1");
+        mobileBackupUrl = ((Map<String, Object>) mobileMe.get("com.apple.Dataclass.Backup")).get("url").toString()
+                .replaceAll("https://(p[0-9]+-mobilebackup.icloud.com):443$", "$1");    //Get MobileBackup URL
+        
+        contentUrl = ((Map<String, Object>) mobileMe.get("com.apple.Dataclass.Content")).get("url").toString()
+                .replaceAll("https://(p[0-9]+-content.icloud.com):443$", "$1");         //Get Content URL
     }
 
     /**
      * Gets the udids of the devices that have made backups on the account
-     * @param pNum Partition number
-     * @param dsPrsID DsPrsID
-     * @param mmeAuthToken <meAuthToken (From get_account_settings)
-     * @return A list of udids linked with the account (encoded with Protobuf)
+     * @return A list of udids linked with the account (encoded with Protocol Buffers)
+     * @throws com.alexhulbert.icewind.autocol.InvalidResponseException Invalid response to the protobuf
      */
-    public Protocol.DeviceUdids listDevices() throws InvalidProtocolBufferException {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
-        byte[] buffer = Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString(), true);
-        return Protocol.DeviceUdids.parseFrom(buffer);
+    public Protocol.DeviceUdids listDevices() throws InvalidResponseException {
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost(mobileBackupUrl);
+        pb.setPath("/mbs/" + dsPrsID);
+        pb.addHeader("Authorization", "Basic " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
+        try {
+            return pb.build(Protocol.DeviceUdids.PARSER).parse();
+        } catch (InvalidProtocolBufferException ipbe) {
+            throw new InvalidResponseException("Response was not properly encoded in Protobuf format", ipbe);
+        }
     }
 
-    public String listDevices(int index) throws InvalidProtocolBufferException {
-        return Utils.bytesToHex(this.listDevices().getUdids(index).toByteArray());
+    /**
+     * Gets device UDID with specific index. Useful for iterating through all the devices
+     * @param index the index at which to retrieve the UDID. Starts at zero.
+     * @return A UDID at that index
+     * @throws InvalidResponseException 
+     */
+    public String listDevices(int index) throws InvalidResponseException {
+        return Utils.bytesToHex(listDevices().getUdids(index).toByteArray());
     }
 
 
     /**
-     * Gets information on the device
-     * @param pNum Partition number
-     * @param dsPrsID DsPrsID
-     * @param mmeAuthToken MmeAuthToken (From get_account_settings)
+     * Gets information about the specified UDID
      * @param backupUDID The udid of the device to retrieve info on
+     * @throws com.alexhulbert.icewind.autocol.InvalidResponseException Invalid response to the protobuf
      * @return Information of the device (encoded with protobuf)
      */
-    public byte[] getBackup(String backupUDID) {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID, true);
+    public Protocol.Device getBackup(String backupUDID) throws InvalidResponseException {
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost(mobileBackupUrl);
+        pb.setPath(dsPrsID + "/" + backupUDID);
+        pb.addHeader("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
+        try {
+            return pb.build(Protocol.Device.PARSER).parse();
+        } catch (InvalidProtocolBufferException ipbe) {
+            throw new InvalidResponseException("Response was not properly encoded in Protobuf format", ipbe);
+        }
     }
 
     /**
      * Gets the keys that will used for decrypting iCloud data
-     * @param pNum Partition number
-     * @param dsPrsID DsPrsID
-     * @param mmeAuthToken MmeAuthToken (From get_account_settings)
      * @param backupUDID The udid of the device to retrieve info on
      * @return Keys for decrypting icloud data (encoded with protobuf)
+     * @throws com.alexhulbert.icewind.autocol.InvalidResponseException Invalid response to the protobuf
      */
-    public byte[] getKeys(String backupUDID) {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/getKeys", true);
+    public Protocol.Keys getKeys(String backupUDID) throws InvalidResponseException {
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost(mobileBackupUrl);
+        pb.setPath("/mbs/" + dsPrsID + "/" + backupUDID + "/getKeys");
+        pb.addHeader("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
+        try {
+            return pb.build(Protocol.Keys.PARSER).parse();
+        } catch (InvalidProtocolBufferException ipbe) {
+            throw new InvalidResponseException("Response was not properly encoded in Protobuf format", ipbe);
+        }
     }
 
     /**
      * Gets Uris for the iCloud backup data
-     * @param pNum Partition number
-     * @param dsPrsID DsPrsID
-     * @param mmeAuthToken MmeAuthToken (From get_account_settings)
-     * @param backupUDID The udid of the device to retrieve info on
+     * @param backupUDID The UDID of the device to retrieve info on
      * @param snapshotID The ID of the backup to get
      * @param offset Where to start
      * @param limit Max length
+     * @throws com.alexhulbert.icewind.autocol.InvalidResponseException Invalid response to the protobuf
      * @return A list of files to download
      */
-    public byte[] listFiles(String backupUDID, int snapshotID, int offset, Long limit) {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "X-MobileMe-AuthToken " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
-        return Utils.get_bytes(Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/" + snapshotID + "/listFiles?offset=" + offset + (limit == null ? "" : "&limit=" + String.valueOf(limit)), true);
-    }
-
-    public byte[] authorizeGet(byte[] data, String auth) {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Accept", "*/*");
-        authHeaders.put("User-Agent", "MobileBackup/5.1.1 (9B206; iPhone4,1)");
-        authHeaders.put("X-Apple-Request-UUID", "900DFACE-BABE-C001-A550-B00B1E52C0DE"); //Now that's what I call magic hex.
-        authHeaders.put("X-Apple-mmcs-Proto-Version", "3.3");
-        authHeaders.put("X-Apple-mme-dsid", this.dsPrsID.toString());
-        authHeaders.put("X-Apple-mmcs-DataClass", "com.apple.Dataclass.Backup");
-        authHeaders.put("X-mme-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
-        authHeaders.put("X-Apple-mmcs-auth", auth);
-        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), this.contentUrl, "/" + this.dsPrsID.toString() + "/authorizeGet", true);
-    }
-
-    public byte[] getFiles(byte[] data, String backupUDID, int snapshotID) {
-        Map<String, String> authHeaders = new HashMap<String, String>();
-        authHeaders.put("Authorization", "Basic " + Utils.encode(this.dsPrsID.toString(), this.mmeAuthToken));
-        return Utils.post_bytes(data, Utils.getIcpHeaders(authHeaders), this.mobileBackupUrl, "/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/" + snapshotID + "/getFiles", true);
-    }
-
-    public Protocol.File[] parseFiles(byte[] fileList) {
-        CodedInputStream fileCounter = CodedInputStream.newInstance(fileList);
-        CodedInputStream fileParser = CodedInputStream.newInstance(fileList);
-        int numFiles = 0;
-
+    public Protocol.File[] listFiles(String backupUDID, int snapshotID, int offset, Long limit) throws InvalidResponseException {
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost(mobileBackupUrl);
+        pb.setPath("/mbs/" + this.dsPrsID.toString() + "/" + backupUDID + "/" + snapshotID + "/listFiles");
+        pb.addHeader("offset", String.valueOf(offset));
+        pb.addHeader("Authorization", "X-MobileMe-AuthToken " + Utils.encode(dsPrsID.toString(), mmeAuthToken));
+        if (limit != null) {
+            pb.addHeader("limit", String.valueOf(limit));
+        }
+        EasyProto<Protocol.File> ep = pb.build(Protocol.File.PARSER);
         if (prog != null) {
             prog.activate(true);
             prog.intermediate();
             prog.status("Calculating File Size..."); //Just like Windows Explorer!
-        }
-
-        try {
-            for (numFiles = 0; !fileCounter.isAtEnd(); numFiles++) {
-                int j = fileCounter.readRawVarint32();
-                fileCounter.skipRawBytes(j);
-            }
-        } catch (IOException e) {
-            //errorhandle: Well sh[a-z]{1}t... This isn't supposed to happen.
-        }
-
-        if (prog != null) {
-            prog.percentage();
-        }
-
-        Protocol.File[] files = new Protocol.File[numFiles];
-        try {
-            for (int i = 0; !fileParser.isAtEnd(); i++) {
-                int len = fileParser.readRawVarint32();
-                try {
-                    files[i] = Protocol.File.parseFrom(fileParser.readRawBytes(len));
-                } catch (InvalidProtocolBufferException ipbe) {
-                    files[i] = null;
-                    //errorhandle: REPORT THIS TO THE DEVELOPER!!! (me)
-                }
-
-                if (prog != null) {
-                    prog.progress(((i + 1) / numFiles) * 100);
-                    prog.status("Parsing File list: " + (((i + 1) / numFiles) * 100) + "% done");
-                }
-            }
-        } catch (IOException e) {
-            //errorhandle: Remember: Its always the user's fault, not the programmer's.
-        }
-
-        if (prog != null) {
+            Protocol.File[] response = ep.parseVarint(prog, "Parsing File List");
             prog.activate(false);
+            return response;
+        } else {
+            return ep.parseVarint();
         }
-        return files;
+    }
+    
+    /**
+     * Gets keys, info, etc. from files
+     * @param auch GetFiles Response
+     * @param hashDict Hash Dictionary
+     * @return Invalid response to the protobuf
+     * @throws com.alexhulbert.icewind.autocol.InvalidResponseException Invalid response to the protobuf
+     */
+    public Protocol.FileAuth authorizeGet(Protocol.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) throws InvalidResponseException {
+        Protocol.FileAuth.Builder builder = Protocol.FileAuth.newBuilder();
+        for (Protocol.AuthChunk file : auch) {
+            Protocol.AuthChunk.Builder subBuilder = Protocol.AuthChunk.newBuilder();
+            subBuilder.setAuthToken(file.getAuthToken());
+            subBuilder.setChecksum(hashDict.get(file.getChecksum()));
+            builder.addMain(subBuilder.build());
+        }
+        
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost(contentUrl);
+        pb.setPath("/" + dsPrsID + "/authorizeGet");
+        pb.setBody(builder.build().toByteArray());
+        pb.addHeader("Accept", "*/*");
+        pb.addHeader("User-Agent", "MobileBackup/5.1.1 (9B206; iPhone4,1)");
+        pb.addHeader("X-Apple-Request-UUID", "900DFACE-BABE-C001-A550-B00B1E52C0DE"); //Now that's what I call magic hex.
+        pb.addHeader("X-Apple-mmcs-Proto-Version", "3.3");
+        pb.addHeader("X-Apple-mme-dsid", dsPrsID.toString());
+        pb.addHeader("X-Apple-mmcs-DataClass", "com.apple.Dataclass.Backup");
+        pb.addHeader("X-mme-Client-Info", "<iPhone4,1> <iPhone OS;5.1.1;9B206> <com.apple.AppleAccount/1.0 (com.apple.backupd/(null))>");
+        pb.addHeader("X-Apple-mmcs-auth", Utils.bytesToHex(hashDict.get(auch[0].getChecksum()).toByteArray()).concat(" ") + auch[0].getAuthToken());
+        try {
+            return pb.build(Protocol.FileAuth.PARSER).parse();
+        } catch (InvalidProtocolBufferException ipbe) {
+            throw new InvalidResponseException("Response was not properly encoded in Protobuf format", ipbe);
+        }
     }
 
-    public Protocol.AuthChunk[] parseGetFiles(byte[] getFilesResponse) {
-        List<Protocol.AuthChunk> resps = new ArrayList<Protocol.AuthChunk>();
-        ByteArrayInputStream bais = new ByteArrayInputStream(getFilesResponse);
-        while (bais.available() > 0) {
-            try {
-                resps.add(Protocol.AuthChunk.parseDelimitedFrom(bais));
-            } catch(IOException e) {
-                //errorhandle: I'm putting these here so I know where to add error handling later
-            }
-        }
-        return resps.toArray(new Protocol.AuthChunk[resps.size()]);
-    }
-
-    public byte[] buildGetFiles(Protocol.File[] files) {
+    /**
+     * Gets Auth tokens for files (used for verification in authorizeGet)
+     * @param files ListFiles Response
+     * @param backupUDID UDID of the device
+     * @param snapshotID Id of the backup
+     * @return A list of file auth tokens
+     * @throws com.alexhulbert.icewind.autocol.InvalidResponseException Invalid response to the protobuf
+     */
+    public Protocol.AuthChunk[] getFiles(Protocol.File[] files, String backupUDID, int snapshotID) throws InvalidResponseException {
         ByteArrayOutputStream oust = new ByteArrayOutputStream();
         for (Protocol.File f : files) {
             if (f == null || f.getFileSize() == 0) {
@@ -301,7 +287,11 @@ public class iCloud {
                 //errorhandle: I guess user's not getting their flappy bird save.
             }
         }
-        return oust.toByteArray();
+        ProtoBuilder pb = new ProtoBuilder();
+        pb.setHost(mobileBackupUrl);
+        pb.setPath(String.format("/mbs/%s/%s/%s/getFiles", dsPrsID, backupUDID, snapshotID));
+        pb.addHeader("Authorization", Utils.encode(dsPrsID.toString(), mmeAuthToken));
+        return pb.build(Protocol.AuthChunk.PARSER).parseVarint();
     }
 
     public static Map<ByteString, ByteString> buildHashDictionary(Protocol.File[] sources) {
@@ -312,48 +302,16 @@ public class iCloud {
         return dict;
     }
 
-    public static Pair<String, Protocol.FileAuth> buildAuthorizeGet(Protocol.AuthChunk[] auch, Map<ByteString, ByteString> hashDict) {
-        Protocol.FileAuth.Builder builder = Protocol.FileAuth.newBuilder();
-        for (Protocol.AuthChunk file : auch) {
-            Protocol.AuthChunk.Builder subBuilder = Protocol.AuthChunk.newBuilder();
-            subBuilder.setAuthToken(file.getAuthToken());
-            subBuilder.setChecksum(hashDict.get(file.getChecksum()));
-            builder.addMain(subBuilder.build());
-        }
-        return new Pair<String, Protocol.FileAuth>(
-                Utils.bytesToHex(hashDict.get(auch[0].getChecksum()).toByteArray()).concat(" ") +
-                auch[0].getAuthToken(),
-                builder.build()
-        );
-    }
-
-    /**
-     * Used to check if there have been any errors, etc.
-     * @return Whether everything has succeeded so far
-     */
-    public boolean getStatus() {
-        return this.status;
-    }
-
-    /*//Maybe implement generics with this? It could be incorperated into EasyProto.
-    private static Object ProtobufRequest(String host, String method, String url, byte[] body, String headers, Object msg)
-    {
-
-        return null;
-    }*/
-
-    public void downloadBackup(String backupUDID, String outputFolder) throws InvalidProtocolBufferException {
+    public void downloadBackup(String backupUDID, String outputFolder) throws InvalidResponseException {
         byte[] snapshotInfo = this.getBackup(backupUDID);
         int sid = Protocol.Device.parseFrom(snapshotInfo).getBackup(0).getSnapshotID();
-        byte[] fileList = this.listFiles(
+        Protocol.File[] files = this.listFiles(
                 backupUDID,
                 sid,
                 0,
                 (long) (Math.pow(2, 16) - 1)
         );
-        Protocol.File[] files = this.parseFiles(fileList);
-        byte[] gkResponse = this.getKeys(backupUDID);
-        Protocol.Keys actualKeys = Protocol.Keys.parseFrom(gkResponse);
+        Protocol.Keys actualKeys = this.getKeys(backupUDID);
         Keybag kbag = new Keybag(actualKeys.getKeySet(1).getDataBytes().toByteArray());
 
         if (kbag.getTYPE() != Keybag.Types.BACKUP_KEYBAG && kbag.getTYPE() != Keybag.Types.OTA_KEYBAG)
@@ -368,5 +326,5 @@ public class iCloud {
         PBKDF2Engine e = new PBKDF2Engine(p);
         p.setDerivedKey(e.deriveKey(passcode));
         Utils.noop();
-
     }
+}

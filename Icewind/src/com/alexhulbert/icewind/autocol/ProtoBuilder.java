@@ -66,15 +66,15 @@ public class ProtoBuilder {
         headers = new HashMap<String, String>();
     }
     
-    private InputStream execute() throws InvalidResponseException, MissingHostException {
+    private InputStream execute() throws InvalidResponseException {
         if (body == null || body.length == 0)
             doPost = false;
         if (headers == null)
             headers = Utils.getIcpHeaders();
         if (path.isEmpty() || path == null)
             path = "/";
-        if (host.isEmpty() || host == null)
-            throw new MissingHostException("Please supply a host to send your request to.");
+        //if (host.isEmpty() || host == null)
+        //    throw new MissingHostException("Please supply a host to send your request to.");
         
         String fullPath = (ssl ? "https://" : "http://") + host + path;
         HttpResponse hResp = null;
@@ -117,7 +117,7 @@ public class ProtoBuilder {
         }
     }
     
-    public String getResponse() throws InvalidResponseException, MissingHostException {
+    public String getResponse() throws InvalidResponseException {
         String content = "";
         BufferedReader br = new BufferedReader(new InputStreamReader(this.execute()));
         
@@ -136,15 +136,11 @@ public class ProtoBuilder {
         throw new InvalidResponseException("Server did not respond");
     }
     
-    public <T extends GeneratedMessage> EasyProto<T> build(Parser<T> parser) throws InvalidResponseException, MissingHostException {
+    public <T extends GeneratedMessage> EasyProto<T> build(Parser<T> parser) throws InvalidResponseException {
         try {
             return new EasyProto<T>(parser, IOUtils.toByteArray(this.execute()));
         } catch (IOException e) {
             throw new InvalidResponseException("Could not parse server response as string", e);
         }
     }
-    
-    private void checkFields() throws MissingHostException {
-        
-    } 
 }
