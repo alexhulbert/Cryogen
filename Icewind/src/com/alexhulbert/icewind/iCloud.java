@@ -305,7 +305,7 @@ public class iCloud {
                 backupUDID,
                 sid,
                 0,
-                (long) (Math.pow(2, 16) - 1)
+                (long) (1<<16 - 1)
         );
         Protocol.Keys keys = this.getKeys(backupUDID);
         Keybag kbag = new Keybag(keys.getKeySet(1).getDataBytes().toByteArray());
