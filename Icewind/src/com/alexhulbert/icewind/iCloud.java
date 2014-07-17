@@ -15,6 +15,10 @@ import org.apache.commons.io.FileUtils;
 import xmlwise.Plist;
 import xmlwise.XmlParseException;
 
+import org.catacombae.hfsexplorer.iphone.Keybag;
+import de.rtner.security.auth.spi.PBKDF2Engine;
+import de.rtner.security.auth.spi.PBKDF2Parameters;
+
 /**
  *
  * @author Taconut
@@ -295,17 +299,16 @@ public class iCloud {
         return dict;
     }
   
-    /*public void downloadBackup(String backupUDID, String outputFolder) throws InvalidResponseException {
-        byte[] snapshotInfo = this.getBackup(backupUDID);
-        int sid = Protocol.Device.parseFrom(snapshotInfo).getBackup(0).getSnapshotID();
+    public void downloadBackup(String backupUDID, String outputFolder) throws InvalidResponseException {
+        int sid = this.getBackup(backupUDID).getBackup(0).getSnapshotID();
         Protocol.File[] files = this.listFiles(
                 backupUDID,
                 sid,
                 0,
                 (long) (Math.pow(2, 16) - 1)
         );
-        Protocol.Keys actualKeys = this.getKeys(backupUDID);
-        Keybag kbag = new Keybag(actualKeys.getKeySet(1).getDataBytes().toByteArray());
+        Protocol.Keys keys = this.getKeys(backupUDID);
+        Keybag kbag = new Keybag(keys.getKeySet(1).getDataBytes().toByteArray());
 
         if (kbag.getTYPE() != Keybag.Types.BACKUP_KEYBAG && kbag.getTYPE() != Keybag.Types.OTA_KEYBAG)
         {
@@ -313,11 +316,22 @@ public class iCloud {
             return;
         }
 
-        String passcode = new String(actualKeys.getKeySet(0).getDataBytes().toByteArray());
+        String passcode = new String(keys.getKeySet(0).getDataBytes().toByteArray());
 
         PBKDF2Parameters p = new PBKDF2Parameters("HmacSHA1", "UTF-8", kbag.getSALT(), kbag.getITER());
         PBKDF2Engine e = new PBKDF2Engine(p);
-        p.setDerivedKey(e.deriveKey(passcode));
+        byte[] tehkeys = e.deriveKey(passcode, 32);
+        p.setDerivedKey(tehkeys); // is this required??
+        
+        if (!e.verifyKey(passcode))
+        {
+            //raise an exception?
+            return;
+        }
+        
+        kbag.unlockPasscode(passcode);
+        
         Utils.noop();
-    }*/
+    }
+    
 }
