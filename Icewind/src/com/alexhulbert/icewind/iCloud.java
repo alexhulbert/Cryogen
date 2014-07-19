@@ -299,7 +299,7 @@ public class iCloud {
         return dict;
     }
   
-    public void downloadBackup(String backupUDID, String outputFolder) throws InvalidResponseException {
+    public void downloadBackup(String backupUDID, String outputFolder) throws Exception {
         int sid = this.getBackup(backupUDID).getBackup(0).getSnapshotID();
         Protocol.File[] files = this.listFiles(
                 backupUDID,
@@ -320,8 +320,8 @@ public class iCloud {
 
         PBKDF2Parameters p = new PBKDF2Parameters("HmacSHA1", "UTF-8", kbag.getSALT(), kbag.getITER());
         PBKDF2Engine e = new PBKDF2Engine(p);
-        byte[] tehkeys = e.deriveKey(passcode, 32);
-        p.setDerivedKey(tehkeys); // is this required??
+        byte[] passcodeKey = e.deriveKey(passcode, 32);
+        p.setDerivedKey(passcodeKey); // is this required??
         
         if (!e.verifyKey(passcode))
         {
@@ -329,7 +329,7 @@ public class iCloud {
             return;
         }
         
-        kbag.unlockPasscode(passcode);
+        kbag.unlockWithPasscodeKey(passcodeKey);
         
         Utils.noop();
     }
