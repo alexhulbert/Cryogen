@@ -7,8 +7,10 @@ import java.nio.ByteBuffer;
 
 import org.catacombae.dmgextractor.Util;
 
+import javax.crypto.Cipher;
+import java.io.*;
 
-
+import javax.crypto.spec.SecretKeySpec;
 public class Keybag {
     private static final int WRAP_DEVICE = 1;
     private static final int WRAP_PASSCODE = 2;
@@ -16,7 +18,7 @@ public class Keybag {
     private static final String[] KEYBAG_TAGS = {"VERS", "TYPE", "UUID", "HMCK", "WRAP", "SALT", "ITER"};
     private static final String[] CLASSKEY_TAGS = {"CLAS","WRAP","WPKY", "KTYP", "PBKY"};
     private HashMap<String, byte[]> attributes;
-    private HashMap<byte[], HashMap<String, byte[]>> classKeys;
+    public HashMap<byte[], HashMap<String, byte[]>> classKeys;
     
     public Boolean unlocked = false;
 
@@ -73,7 +75,7 @@ public class Keybag {
         return Types.values()[ByteBuffer.wrap(this.attributes.get("TYPE")).getInt()];
     }
     
-    public Boolean unlockPasscode(String passcode)
+    public Boolean unlockWithPasscodeKey(byte[] passcodeKey) throws Exception //lol
     {
         for (HashMap<String, byte[]> classKey : this.classKeys.values()) {
             if (!classKey.containsKey("WPKY"))
@@ -81,24 +83,28 @@ public class Keybag {
             
             byte[] k = classKey.get("WPKY");
             int wrap = ByteBuffer.wrap(classKey.get("WRAP")).getInt();
-            if ((wrap & WRAP_PASSCODE) != 0) { // is this even correct?
-                /* python code:
-                k = AESUnwrap(passcodekey, classkey["WPKY"])
-                if not k:
-                    return False
-                */
+            if ((wrap & WRAP_PASSCODE) != 0) {
+                k = AESUnwrap(passcodeKey, classKey.get("WPKY"));
             }
-            if ((wrap & WRAP_DEVICE) != 0) { 
-                /* python code:
-                if not self.deviceKey:
-                    continue
-                k = AESdecryptCBC(k, self.deviceKey)
-                */
-            }
+            // this is not needed
+            /*if ((wrap & WRAP_DEVICE) != 0) { 
+                //python code:
+                //if not self.deviceKey:
+                //    continue
+                //k = AESdecryptCBC(k, self.deviceKey)
+                
+            }*/
             classKey.put("KEY", k);
         }
         this.unlocked = true;
         
         return true;
+    }
+    
+    private byte[] AESUnwrap(byte[] key, byte[] wrapped) throws Exception
+    {
+        Cipher cipher = Cipher.getInstance("AESWrap");
+        cipher.init(Cipher.UNWRAP_MODE, new SecretKeySpec(key, "AES"));
+        return cipher.unwrap(wrapped, "AES", Cipher.SECRET_KEY).getEncoded();
     }
 }
