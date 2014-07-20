@@ -16,8 +16,8 @@ import xmlwise.Plist;
 import xmlwise.XmlParseException;
 
 import org.catacombae.hfsexplorer.iphone.Keybag;
-import de.rtner.security.auth.spi.PBKDF2Engine;
-import de.rtner.security.auth.spi.PBKDF2Parameters;
+import de.rtner.security.auth.spi.*;
+import java.util.Arrays;
 
 /**
  *
@@ -315,22 +315,14 @@ public class iCloud {
             //Oops, something bad happened
             return;
         }
-
-        String passcode = new String(keys.getKeySet(0).getDataBytes().toByteArray());
-
-        PBKDF2Parameters p = new PBKDF2Parameters("HmacSHA1", "UTF-8", kbag.getSALT(), kbag.getITER());
+        
+        byte[] passcode = keys.getKeySet(0).getDataBytes().toByteArray();
+        
+        PBKDF2Parameters p = new PBKDF2Parameters("HmacSHA1", null, kbag.getSALT(), kbag.getITER());
         PBKDF2Engine e = new PBKDF2Engine(p);
         byte[] passcodeKey = e.deriveKey(passcode, 32);
-        p.setDerivedKey(passcodeKey); // is this required??
-        
-        if (!e.verifyKey(passcode))
-        {
-            //raise an exception?
-            return;
-        }
         
         kbag.unlockWithPasscodeKey(passcodeKey);
-        
         Utils.noop();
     }
     
