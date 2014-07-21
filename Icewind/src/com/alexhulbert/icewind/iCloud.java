@@ -14,10 +14,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import xmlwise.Plist;
 import xmlwise.XmlParseException;
-
 import org.catacombae.hfsexplorer.iphone.Keybag;
-import de.rtner.security.auth.spi.*;
-import java.util.Arrays;
 
 /**
  *
@@ -310,19 +307,10 @@ public class iCloud {
         Protocol.Keys keys = this.getKeys(backupUDID);
         Keybag kbag = new Keybag(keys.getKeySet(1).getDataBytes().toByteArray());
 
-        if (kbag.getTYPE() != Keybag.Types.BACKUP_KEYBAG && kbag.getTYPE() != Keybag.Types.OTA_KEYBAG)
-        {
-            //Oops, something bad happened
-            return;
-        }
-        
         byte[] passcode = keys.getKeySet(0).getDataBytes().toByteArray();
         
-        PBKDF2Parameters p = new PBKDF2Parameters("HmacSHA1", null, kbag.getSALT(), kbag.getITER());
-        PBKDF2Engine e = new PBKDF2Engine(p);
-        byte[] passcodeKey = e.deriveKey(passcode, 32);
+        kbag.unlockBackupKeybagWithPasscode(passcode);
         
-        kbag.unlockWithPasscodeKey(passcodeKey);
         Utils.noop();
     }
     

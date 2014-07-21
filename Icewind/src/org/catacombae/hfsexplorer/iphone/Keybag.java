@@ -2,25 +2,26 @@ package org.catacombae.hfsexplorer.iphone;
 
 import java.util.Arrays;
 import java.util.HashMap;
-
 import java.nio.ByteBuffer;
-
-import org.catacombae.dmgextractor.Util;
-
 import javax.crypto.Cipher;
-import java.io.*;
-
 import javax.crypto.spec.SecretKeySpec;
+import org.catacombae.dmgextractor.Util;
+import de.rtner.security.auth.spi.PBKDF2Engine;
+import de.rtner.security.auth.spi.PBKDF2Parameters;
+import djb.Curve25519;
+import java.security.MessageDigest;
+import java.io.ByteArrayOutputStream;
+
 public class Keybag {
     private static final int WRAP_DEVICE = 1;
     private static final int WRAP_PASSCODE = 2;
     public static enum Types {SYSTEM_KEYBAG, BACKUP_KEYBAG, ESCROW_KEYBAG, OTA_KEYBAG};
     private static final String[] KEYBAG_TAGS = {"VERS", "TYPE", "UUID", "HMCK", "WRAP", "SALT", "ITER"};
     private static final String[] CLASSKEY_TAGS = {"CLAS","WRAP","WPKY", "KTYP", "PBKY"};
-    private HashMap<String, byte[]> attributes;
-    public HashMap<byte[], HashMap<String, byte[]>> classKeys;
     
-    public Boolean unlocked = false;
+    private HashMap<String, byte[]> attributes;
+    private HashMap<byte[], HashMap<String, byte[]>> classKeys;
+    public Boolean unlocked = false; // not sure if needed
 
     public Keybag(byte[] data)
     {
@@ -75,15 +76,13 @@ public class Keybag {
         return Types.values()[ByteBuffer.wrap(this.attributes.get("TYPE")).getInt()];
     }
     
-    public Boolean unlockWithPasscodeKey(byte[] passcodeKey) throws Exception //lol
-    {
+    public Boolean unlockWithPasscodeKey(byte[] passcodeKey) throws Exception {
         for (HashMap<String, byte[]> classKey : this.classKeys.values()) {
             if (!classKey.containsKey("WPKY"))
                 continue;
             
             byte[] k = classKey.get("WPKY");
-            int wrap = ByteBuffer.wrap(classKey.get("WRAP")).getInt();
-            if ((wrap & WRAP_PASSCODE) != 0) {
+            if ((ByteBuffer.wrap(classKey.get("WRAP")).getInt() & WRAP_PASSCODE) != 0) {
                 k = AESUnwrap(passcodeKey, classKey.get("WPKY"));
             }
             // this is not needed
@@ -101,10 +100,43 @@ public class Keybag {
         return true;
     }
     
-    private byte[] AESUnwrap(byte[] key, byte[] wrapped) throws Exception
-    {
+    public byte[] getPasscodekeyFromPasscode(byte[] passcode) throws Exception {
+        int iter = this.getTYPE() == Types.BACKUP_KEYBAG || this.getTYPE() == Types.OTA_KEYBAG ? this.getITER() : 1;
+        PBKDF2Parameters p = new PBKDF2Parameters("HmacSHA1", null, this.getSALT(), iter);
+        PBKDF2Engine e = new PBKDF2Engine(p);
+        return e.deriveKey(passcode, 32);
+    }
+    
+    public Boolean unlockBackupKeybagWithPasscode(byte[] passcode) throws Exception {
+        if (this.getTYPE() == Types.BACKUP_KEYBAG || this.getTYPE() == Types.OTA_KEYBAG) {
+            return false; // not a backup keybag!
+        }
+        return this.unlockWithPasscodeKey(this.getPasscodekeyFromPasscode(passcode));
+    }
+    
+    private byte[] AESUnwrap(byte[] key, byte[] wrapped) throws Exception {
         Cipher cipher = Cipher.getInstance("AESWrap");
         cipher.init(Cipher.UNWRAP_MODE, new SecretKeySpec(key, "AES"));
         return cipher.unwrap(wrapped, "AES", Cipher.SECRET_KEY).getEncoded();
+    }
+    
+    private byte[] unwrapCurve25519(byte[] persistentClass, byte[] persistentKey) throws Exception {
+        assert persistentKey.length == 0x48;
+        byte[] mySecret = this.classKeys.get(persistentClass).get("KEY");
+        byte[] myPublic = this.classKeys.get(persistentClass).get("PBKY");
+        byte[] hisPublic = Arrays.copyOfRange(persistentKey, 0, 32);
+        byte[] shared = new byte[32];
+        Curve25519.curve(shared, mySecret, hisPublic); // not really sure
+        
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        stream.write(new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        stream.write(shared);
+        stream.write(hisPublic);
+        stream.write(myPublic);
+        
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] md = digest.digest(stream.toByteArray());
+        
+        return AESUnwrap(md, hisPublic);
     }
 }
